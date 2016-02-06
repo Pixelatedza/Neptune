@@ -1,0 +1,17 @@
+<li class="treeview">
+	<a href="#">
+		<!-- Will implement icons later -->
+		<!-- <i class="fa fa-dashboard"></i> -->
+		<span>{{menu.text}}</span>
+		{% if menu.children %}
+		<i class="fa fa-angle-left pull-right"></i>
+		{% endif %}
+	</a>
+	{% if menu.children %}
+	<ul class="treeview-menu">
+		{% for child in menu.children %}
+			{{child.render}}
+		{% endfor %}
+	</ul>
+	{% endif %}
+</li>
