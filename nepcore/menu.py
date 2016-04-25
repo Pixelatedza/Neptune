@@ -3,6 +3,7 @@ from django.template.loader import get_template
 from django.utils.safestring import mark_safe
 from importlib import import_module
 from django import template
+from nepcore.state import index_state
 
 class Menu(object):
 	template_path = 'nepcore/menus/menu.html'
@@ -37,19 +38,21 @@ class Menu(object):
 		return html
 
 	def __str__(self):
-		return self.render()
+		return self
 
 class MenuObj(Menu):
 	template_path = 'nepcore/menus/menu_obj.html'
 
 	def __init__(self, *args, **kwargs):
 		super(MenuObj, self).__init__(*args, **kwargs)
-		self.link = kwargs.get('link', '')
+		self.state = kwargs.get('state', None)
 		self.text = kwargs.get('text', 'Menu')
+		self.link = kwargs.get('link', None)
 
 	def __str__(self):
 		return self.text
 
 menu = Menu()
-menu.register(link="db", text="Dashboard", icon="dashboard")
+menu.register(text="Dashboard",state=index_state)
+
 menu.auto_discover()

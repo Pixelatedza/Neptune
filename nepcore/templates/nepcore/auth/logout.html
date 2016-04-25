@@ -1,0 +1,25 @@
+{% extends "nepcore/base.html" %}
+
+{% block body %}
+<body class="hold-transition lockscreen">
+
+	<div class="lockscreen-wrapper">
+	  	<div class="lockscreen-logo">
+	  		<b>Neptune</b>
+	  	</div>
+
+	 	<div class="lockscreen-name">Logout Success!</div>
+
+	  	<div class="help-block text-center">Login to start new session</div>
+
+	  	<div class="text-center">
+	    	<a href="{{link}}">Back to login</a>
+	  	</div>
+	</div>
+
+<!-- jQuery 2.1.4 -->
+<script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}
