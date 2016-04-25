@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'nepcore',
     'asset',
     'item',
+    'tools',
 )
 
 MIDDLEWARE_CLASSES = (

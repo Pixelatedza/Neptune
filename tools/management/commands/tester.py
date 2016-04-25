@@ -4,8 +4,8 @@ import os, sys, time
 from django.conf import settings
 
 class Command(BaseCommand):
-    help = """Add testinf data and test stuff."""
+    help = """Add testing data and test stuff."""
 
-    def process(self, path):
+    def handle(self, *args, **options):
 
-        pass
+        print 'hello'
