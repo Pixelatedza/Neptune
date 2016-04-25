@@ -1,1 +1,4 @@
 *.pyc
+*.sqlite3
+*.py.orig
+*.idea
