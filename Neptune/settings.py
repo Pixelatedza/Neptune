@@ -39,7 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'nepcore',
-    'asset'
+    'asset',
+    'item'
 )
 
 MIDDLEWARE_CLASSES = (
