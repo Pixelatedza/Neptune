@@ -1,7 +1,8 @@
 <li class="treeview">
 	<a href="#">
-		<!-- Will implement icons later -->
-		<!-- <i class="fa fa-dashboard"></i> -->
+		{% if menu.icon %}
+		<i class="fa fa-{{menu.icon}}"></i>
+		{% endif %}
 		<span>{{menu.text}}</span>
 		{% if menu.children %}
 		<i class="fa fa-angle-left pull-right"></i>
