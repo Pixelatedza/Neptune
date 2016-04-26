@@ -8,7 +8,7 @@
                 <form class="form-horizontal" action='/nepcore/item/' method='POST'>
                     <div class="box-body">
                         {% csrf_token %}
-                        {{form}}
+                        {{form.as_bootstrap}}
                         <input type="submit" value="Submit" />
                     </div>
                 </form>

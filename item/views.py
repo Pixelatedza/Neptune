@@ -15,12 +15,12 @@ class ItemTypeView(FormView):
 	def form_valid(self, form):
 		#print form.data
 		d = {}
-		d['item_type'] = form.data['item_type']
+		d['itemType'] = form.data['itemType']
 		d['attributes'] = []
 		attributes = form.data['attributes'].split(',')
 		for p in attributes:
 			li = p.split('-')
-			d['attributes'].append({'label':li[0],'_type':li[1]})
+			d['attributes'].append({'label':li[0],'dataType':li[1]})
 		#d['attributes'] = form.data['attributes'].split(',')
 		HandleItems.create_type_with_attrs(d)
 		return super(ItemTypeView, self).form_valid(form)
@@ -33,7 +33,7 @@ class ItemView(FormView):
 	def form_valid(self, form):
 		#print form.data
 		d = {}
-		d['item_type'] = form.data['item_type']
+		d['itemType'] = form.data['itemType']
 		d['attributes'] = []
 		attributes = form.data['attributes'].split(',')
 		for p in attributes:

@@ -1,15 +1,11 @@
 from django.views.generic import TemplateView
-from django.forms import modelform_factory
 from nepcore.menu import menu
 from nepcore.state import state_manager
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 import json
 from django.views.generic.edit import FormView
 from django.http import JsonResponse
-from asset import models
-from asset.forms import NEPBaseModelForm
 
 class BaseView(TemplateView):
 	template_name = "nepcore/base_content.html"
@@ -22,18 +18,6 @@ class BaseView(TemplateView):
 
 class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
-
-class TestView(FormView):
-	template_name = "nepcore/test.html"
-
-	def get(self, request):
-		model_name = request.GET.get('model', "Asset")
-		form_model = getattr(models, model_name)
-		self.form_class = modelform_factory(form_model, form=NEPBaseModelForm)
-		return super(TestView, self).get(self, request)
-
-class IndexView3(TemplateView):
-	template_name = "nepcore/index3.html"
 
 class LoginView(FormView):
 	def get_context_data(self, **kwargs):
