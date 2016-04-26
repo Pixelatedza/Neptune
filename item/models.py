@@ -19,7 +19,6 @@ class Item(models.Model):
 
 class Property(models.Model):
     #different properties
-    name = models.CharField(max_length=255)
     label = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
 
@@ -28,11 +27,11 @@ class Property(models.Model):
 
 class ItemProperty(models.Model):
     #which specific items has which properties?
-    itemID = models.ForeignKey(ItemType)
+    itemTypeID = models.ForeignKey(ItemType)
     propertyID = models.ForeignKey(Property)
 
     def __str__(self):
-        return self.itemID
+        return self.itemTypeID
 
 class ItemPropertyValue(models.Model):
     #which value belong to a property for a specific item.
