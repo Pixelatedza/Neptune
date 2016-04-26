@@ -28,7 +28,7 @@ class Property(models.Model):
 class ItemProperty(models.Model):
     #which specific items has which properties?
     item = models.ForeignKey(ItemType)
-    property = models.ForeignKey(Property)
+    attribute = models.ForeignKey(Property)
 
     def __str__(self):
         return self.itemID
@@ -36,7 +36,7 @@ class ItemProperty(models.Model):
 class ItemPropertyValue(models.Model):
     #which value belong to a property for a specific item.
     item = models.ForeignKey(Item)
-    property = models.ForeignKey(Property)
+    attribute = models.ForeignKey(Property)
     value = models.CharField(max_length=255)
 
     def __str__(self):
