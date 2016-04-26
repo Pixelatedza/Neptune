@@ -16,13 +16,13 @@ class ItemTypeView(FormView):
 		#print form.data
 		d = {}
 		d['item_type'] = form.data['item_type']
-		d['properties'] = []
-		properties = form.data['properties'].split(',')
-		for p in properties:
+		d['attributes'] = []
+		attributes = form.data['attributes'].split(',')
+		for p in attributes:
 			li = p.split('-')
-			d['properties'].append({'label':li[0],'_type':li[1]})
-		#d['properties'] = form.data['properties'].split(',')
-		HandleItems.create_type_with_props(d)
+			d['attributes'].append({'label':li[0],'_type':li[1]})
+		#d['attributes'] = form.data['attributes'].split(',')
+		HandleItems.create_type_with_attrs(d)
 		return super(ItemTypeView, self).form_valid(form)
 
 class ItemView(FormView):
@@ -34,11 +34,11 @@ class ItemView(FormView):
 		#print form.data
 		d = {}
 		d['item_type'] = form.data['item_type']
-		d['properties'] = []
-		properties = form.data['properties'].split(',')
-		for p in properties:
+		d['attributes'] = []
+		attributes = form.data['attributes'].split(',')
+		for p in attributes:
 			li = p.split('-')
-			d['properties'].append({'label':li[0],'_type':li[1]})
-		#d['properties'] = form.data['properties'].split(',')
+			d['attributes'].append({'label':li[0],'_type':li[1]})
+		#d['attributes'] = form.data['attributes'].split(',')
 		tempf(d)
 		return super(IndexView, self).form_valid(form)

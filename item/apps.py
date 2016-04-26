@@ -18,8 +18,8 @@ class HandleItems(object):
         obj.save()
 
     @classmethod
-    def create_attribute(self, label, type):
-        obj = Attribute(label=label, type=type)
+    def create_attribute(self, label, dataType):
+        obj = Attribute(label=label, dataType=dataType)
         obj.save()
         return obj
 

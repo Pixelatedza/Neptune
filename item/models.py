@@ -25,7 +25,7 @@ class Attribute(models.Model):
 
 class ItemAttribute(models.Model):
     #which specific items has which properties?
-    item = models.ForeignKey(ItemType)
+    itemType = models.ForeignKey(ItemType)
     attribute = models.ForeignKey(Attribute)
 
     def __str__(self):
