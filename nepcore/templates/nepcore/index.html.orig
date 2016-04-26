@@ -9,6 +9,16 @@
       </ol>
     </section>
 
+<<<<<<< HEAD
+{% block menu %}
+	<aside class="main-sidebar">
+		<!-- sidebar: style can be found in sidebar.less -->
+		<section class="sidebar">
+			{% autoescape off %}{{menu}}{% endautoescape on %}
+		</section>
+	</aside>
+{% endblock %}
+=======
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
@@ -504,3 +514,4 @@
       <!-- /.row (main row) -->
 
     </section>
+>>>>>>> login

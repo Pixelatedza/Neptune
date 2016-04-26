@@ -1,0 +1,79 @@
+{% extends "nepcore/base.html" %}
+
+{% block js %}
+	<script>
+		app.run(['$state', function ($state) {
+			$state.transitionTo('index');
+		}])
+
+		app.config(function($stateProvider, $urlRouterProvider){
+			$stateProvider
+				{% for state in state_manager.states %}
+					.state('{{state.name}}', {
+						url: '{{state.name}}',
+						templateUrl: '{{state.link}}'
+					})
+				{% endfor %}
+			$urlRouterProvider.otherwise('index');
+		})
+	</script>
+{% endblock %}
+
+{% block body %}
+	<body class="skin-black sidebar-mini" ng-app="NeptuneApp">
+	<!-- <div class="wrapper"> -->
+
+		<header class="main-header">
+			<!-- Logo -->
+			<a href="index2.html" class="logo">
+				<!-- mini logo for sidebar mini 50x50 pixels -->
+				<span class="logo-mini"><b>HG</b></span>
+				<!-- logo for regular state and mobile devices -->
+				<span class="logo-lg"><b>Hatfield Group</b></span>
+			</a>
+			<nav class="navbar navbar-static-top" role="navigation">
+			  <!-- Sidebar toggle button-->
+			  <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+				<span class="sr-only">Toggle navigation</span>
+			  </a>
+			  <div class="navbar-custom-menu">
+				<ul class="nav navbar-nav">
+
+					<li class="dropdown user user-menu">
+						<a ng-href="#" 
+						  <span class="hidden-xs">Welcome {{request.username}}
+						</a>
+					</li>
+					<li class="dropdown user user-menu">
+						<a ng-href="/nepcore/logout/" 
+						  <span class="hidden-xs">Logout
+						</a>
+					</li>
+					<li class="dropdown user user-menu">
+						<a ng-href="#">  <span class="hidden-xs">Powered by Neptune</span></a>
+					</li>
+
+				  </ul>
+			  </div>
+			</nav>
+		</header>
+	</body>
+	<!-- </div> -->
+	{% block menu %}
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				{% autoescape off %}{{menu.render}}{% endautoescape on %}
+			</section>
+		</aside>
+	{% endblock %}
+	<!-- <div class="content-wrapper"> -->
+	<div class="content-wrapper" ui-view>
+		{% block content %}
+		{% endblock %}
+	</div>
+	<!-- </div> -->
+
+	{% block extra_js %}
+	{% endblock %}
+{% endblock body %}
