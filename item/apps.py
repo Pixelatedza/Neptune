@@ -2,7 +2,7 @@ import os, sys, time
 
 from django.conf import settings
 
-from item.models import ItemType, Item, Property, ItemProperty, ItemPropertyValue
+from item.models import ItemType, Item, Attribute, ItemAttribute, ItemAttributeValue
 
 class HandleItems(object):
 
@@ -18,55 +18,55 @@ class HandleItems(object):
         obj.save()
 
     @classmethod
-    def create_property(self, label, type):
-        obj = Property(label=label, type=type)
+    def create_attribute(self, label, type):
+        obj = Attribute(label=label, type=type)
         obj.save()
         return obj
 
     @classmethod
-    def create_item_prop_relation(self, itemTypeID, propertyID):
-        obj = ItemProperty(itemTypeID=itemTypeID, propertyID=propertyID)
+    def create_item_attr_relation(self, itemType, attr):
+        obj = ItemAttribute(itemType=itemType, attribute=attr)
         obj.save()
 
     @classmethod
-    def create_item_prop_value(self, itemID, propertyID, value):
-        obj = ItemPropertyValue(itemID=itemID, propertyID=propertyID, value=value)
+    def create_item_attr_value(self, item, attr, value):
+        obj = ItemAttributeValue(item=item, attribute=attr, value=value)
         obj.save()
 
     @classmethod
-    def get_props_for_itemType(self, itemTypeID):
+    def get_props_for_itemType(self, itemType):
 
-        objs = ItemProperty.objects.all().filter(itemTypeID=itemTypeID)
+        objs = ItemAttribute.objects.all().filter(itemType=itemType)
 
-        properties = {}
+        attributes = {}
 
         for obj in objs:
-            prop = Property.objects.get(id=obj.propertyID)
-            properties[prop.label] = prop.id
+            attr = Attribute.objects.get(id=obj.attribute)
+            attributes[attr.label] = attr.id
 
-        return properties
+        return attributes
 
     @classmethod
     def get_item_values(self, itemID):
         values = {}
-        objs = ItemPropertyValue.objects.all().filter(itemID=itemID)
+        objs = ItemAttributeValue.objects.all().filter(itemID=itemID)
 
         for obj in objs:
-            valueLabel = Property.object.get(obj.propertyID).label
+            valueLabel = Attribute.object.get(obj.propertyID).label
             value = obj.value
 
             values[valueLabel] = value
 
     @classmethod
-    def create_type_with_props(self, input):
+    def create_type_with_attrs(self, input):
 
         itemType = input['item_type']
 
         newItemType = self.create_itemType(itemType, itemType)
 
-        for prop in input['properties']:
-            newProp = self.create_property(prop['label'], prop['_type'])
-            self.create_item_prop_relation(newItemType, newProp)
+        for attr in input['attributes']:
+            newAttr = self.create_attribute(attr['label'], attr['_type'])
+            self.create_item_attr_relation(newItemType, newAttr)
 
         return True
 
