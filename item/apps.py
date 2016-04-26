@@ -1,5 +1,3 @@
-import os, sys, time
-
 from django.conf import settings
 
 from item.models import ItemType, Item, Attribute, ItemAttribute, ItemAttributeValue
@@ -16,6 +14,7 @@ class HandleItems(object):
     def create_item(self, name, itemType):
         obj = Item(name=name, itemType=itemType)
         obj.save()
+        return obj
 
     @classmethod
     def create_attribute(self, label, dataType):
@@ -34,32 +33,41 @@ class HandleItems(object):
         obj.save()
 
     @classmethod
-    def get_props_for_itemType(self, itemType):
+    def create_item_with_attr(self, input):
+    #create item and populate its properties values.
+        itemT = ItemType.objects.get(id=input['itemTypeID'])
+        item = self.create_item(input['itemName'], itemT)
 
-        objs = ItemAttribute.objects.all().filter(itemType=itemType)
+        attributes = input['attributes']
 
-        attributes = {}
-
-        for obj in objs:
-            attr = Attribute.objects.get(id=obj.attribute)
-            attributes[attr.label] = attr.id
-
-        return attributes
+        for attr in attributes:
+            attribute = Attribute.objects.get(attribute['id'])
+            self.create_item_attr_value(item, attribute, attribute['value'])
 
     @classmethod
-    def get_item_values(self, itemID):
+    def get_item_values(self, item):
+    #returns a dict of attribute values for a item. {attribute label: value}
         values = {}
-        objs = ItemAttributeValue.objects.all().filter(itemID=itemID)
+        objs = ItemAttributeValue.objects.all().filter(item=item)
 
         for obj in objs:
-            valueLabel = Attribute.object.get(obj.propertyID).label
+            valueLabel = Attribute.object.get(obj.attribute).label
             value = obj.value
 
             values[valueLabel] = value
 
     @classmethod
-    def create_type_with_attrs(self, input):
+    def get_item_type_attrs(self, itemType):
+    #returns a dict with attribute types: {attribute label: attribute type)
+        attributes = ItemAttribute.objects.all().filter(itemType=itemType).attribute
+        result = {}
 
+        for attr in attributes:
+            result[attr.label] = attr.dataType
+
+    @classmethod
+    def create_type_with_attrs(self, input):
+    #creates a new item type and its attributes and links them.
         itemType = input['item_type']
 
         newItemType = self.create_itemType(itemType, itemType)
@@ -69,6 +77,3 @@ class HandleItems(object):
             self.create_item_attr_relation(newItemType, newAttr)
 
         return True
-
-    def __init__ (self):
-        pass
