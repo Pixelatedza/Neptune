@@ -27,13 +27,12 @@ class HandleItems(object):
         obj = ItemAttribute(itemType=itemType, attribute=attr)
         obj.save()
 
-
-    #Following class methods to be used in other modules and apps. Above methods intended for internal use of this module.
     @classmethod
     def create_item_attr_value(self, item, attr, value):
         obj = ItemAttributeValue(item=item, attribute=attr, value=value)
         obj.save()
 
+    #Following class methods to be used in other modules and apps. Above methods intended for internal use of this module.
     @classmethod
     def create_item_with_attrs(self, input):
     #creates item and populate its properties values.
@@ -61,16 +60,18 @@ class HandleItems(object):
             return False
 
     @classmethod
-    def get_item_values(self, item):
-    #returns a dict of attribute values for a item. {attribute label: value}
+    def get_item_values(self, itemID):
+    #returns a dict of attribute values for an item; {attribute label: value}
+        item = Item.objects.get(id=itemID)
         values = {}
         objs = ItemAttributeValue.objects.all().filter(item=item)
 
         for obj in objs:
-            valueLabel = Attribute.object.get(obj.attribute).label
+            valueLabel =  obj.attribute.label
             value = obj.value
-
             values[valueLabel] = value
+
+        return values
 
     @classmethod
     def get_item_type_attrs(self, itemTypeID):
@@ -86,13 +87,19 @@ class HandleItems(object):
         return result
 
     @classmethod
-    def get_item_types(self):
+    def get_all_item_types(self):
     #return all item types: {itemTypeID:ItemTypeName}
         result = {}
         for itemType in ItemType.objects.all():
             result[itemType.id] = itemType.name
         return result
 
+    @classmethod
+    def get_all_items(self):
+        result = {}
+        for item in Item.objects.all():
+            result[item.id] = item.name
+        return result
 
 
 

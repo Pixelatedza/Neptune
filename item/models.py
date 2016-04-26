@@ -25,7 +25,7 @@ class Attribute(models.Model):
     dataType = models.CharField(max_length=50, choices=ITEM_TYPES, default='str')
 
     def __str__(self):
-        return self.name
+        return self.label
 
 class ItemAttribute(models.Model):
     #which specific items has which properties?
@@ -42,4 +42,4 @@ class ItemAttributeValue(models.Model):
     value = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.itemID
+        return self.item.name

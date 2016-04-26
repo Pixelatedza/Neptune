@@ -22,23 +22,34 @@ class Command(BaseCommand):
 
 
         #retrieval of attributes for an item type example:
-        item = HandleItems.get_item_types()
-        itemName = item.itervalues().next()
+        # item = HandleItems.get_all_item_types()
+        # itemName = item.itervalues().next()
+        #
+        # for key, value in item.iteritems():
+        #     if value == itemName:
+        #         itemID = key
+        #
+        # attrs = HandleItems.get_item_type_attrs(itemID)
+        #
+        # for attr in attrs:
+        #     print attr, attrs[attr]
+        #
+        # #Example of an item create:
+        # newItem = {'itemTypeID': itemID}
+        # newItem['itemName'] = 'TaTa'
+        # newItem['attributes'] = []
+        # for attr in attrs:
+        #     newItem['attributes'].append({'id' : attr, 'value' : 'not too sure what val'})
+        #
+        # HandleItems.create_item_with_attrs(newItem)
 
-        for key, value in item.iteritems():
-            if value == itemName:
+        #Example of getting values for an item:
+        items = HandleItems.get_all_items()
+        item = items.itervalues().next()
+
+        for key, value in items.iteritems():
+            if value == item:
                 itemID = key
+        values = HandleItems.get_item_values(itemID)
 
-        attrs = HandleItems.get_item_type_attrs(itemID)
-
-        for attr in attrs:
-            print attr, attrs[attr]
-
-        #Example of an item create:
-        newItem = {'itemTypeID': itemID}
-        newItem['itemName'] = 'TaTa'
-        newItem['attributes'] = []
-        for attr in attrs:
-            newItem['attributes'].append({'id' : attr, 'value' : 'not too sure what val'})
-
-        HandleItems.create_item_with_attrs(newItem)
+        print values
