@@ -1,5 +1,3 @@
-#Ignore Herco's english in this file.
-
 from django.db import models
 
 class ItemType(models.Model):
