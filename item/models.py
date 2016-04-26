@@ -33,7 +33,7 @@ class ItemAttribute(models.Model):
     attribute = models.ForeignKey(Attribute)
 
     def __str__(self):
-        return self.itemID
+        return self.itemType.name
 
 class ItemAttributeValue(models.Model):
     #which value belong to a property for a specific item.

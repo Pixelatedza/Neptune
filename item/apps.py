@@ -27,13 +27,15 @@ class HandleItems(object):
         obj = ItemAttribute(itemType=itemType, attribute=attr)
         obj.save()
 
+
+    #Following class methods to be used in other modules and apps. Above methods intended for internal use of this module.
     @classmethod
     def create_item_attr_value(self, item, attr, value):
         obj = ItemAttributeValue(item=item, attribute=attr, value=value)
         obj.save()
 
     @classmethod
-    def create_item_with_attr(self, input):
+    def create_item_with_attrs(self, input):
     #create item and populate its properties values.
         itemT = ItemType.objects.get(id=input['itemTypeID'])
         item = self.create_item(input['itemName'], itemT)
@@ -59,21 +61,31 @@ class HandleItems(object):
     @classmethod
     def get_item_type_attrs(self, itemType):
     #returns a dict with attribute types: {attribute label: attribute type)
-        attributes = ItemAttribute.objects.all().filter(itemType=itemType).attribute
+        itAts = ItemAttribute.objects.all().filter(itemType=itemType)
         result = {}
 
-        for attr in attributes:
-            result[attr.label] = attr.dataType
+        for itAt in itAts:
+            result[itAt.attribute.label] = itAt.attribute.dataType
+
+        return result
 
     @classmethod
     def create_type_with_attrs(self, input):
     #creates a new item type and its attributes and links them.
-        itemType = input['item_type']
+        try:
+            itemType = input['itemType']
 
-        newItemType = self.create_itemType(itemType, itemType)
+            newItemType = self.create_itemType(itemType, itemType)
 
-        for attr in input['attributes']:
-            newAttr = self.create_attribute(attr['label'], attr['_type'])
-            self.create_item_attr_relation(newItemType, newAttr)
+            for attr in input['attributes']:
+                newAttr = self.create_attribute(attr['label'], attr['dataType'])
+                self.create_item_attr_relation(newItemType, newAttr)
 
-        return True
+            return True
+        except:
+            return False
+
+    @classmethod
+    def get_item_types(self):
+    #return all item types
+        return ItemType.objects.all()
