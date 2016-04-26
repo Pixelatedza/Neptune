@@ -10,19 +10,35 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        FRIDGET = {'itemType': 'Fridge'}
-        FRIDEATTRS = {'attributes': [{'label': 'length', 'dataType': 'int'},
-                                     {'label': 'weight', 'dataType': 'int'},
-                                     {'label': 'colour', 'dataType': 'str'}
-                                     ]
-                      }
+        #EXAMPLES:
 
-        # if HandleItems.create_type_with_attrs(FRIDGET):
+        FRIDGE = {'itemType': 'Car','attributes': [{'label': 'length', 'dataType': 'int'},
+                                     {'label': 'weight', 'dataType': 'int'},
+                                     {'label': 'colour', 'dataType': 'str'}]
+                      }
+        #create taskType and Attribute example:
+        # if HandleItems.create_type_with_attrs(FRIDGE):
         #     print 'Yeeeahhhh!'
 
-        item = HandleItems.get_item_types()[0]
 
-        attrs = HandleItems.get_item_type_attrs(item)
+        #retrieval of attributes for an item type example:
+        item = HandleItems.get_item_types()
+        itemName = item.itervalues().next()
+
+        for key, value in item.iteritems():
+            if value == itemName:
+                itemID = key
+
+        attrs = HandleItems.get_item_type_attrs(itemID)
 
         for attr in attrs:
             print attr, attrs[attr]
+
+        #Example of an item create:
+        newItem = {'itemTypeID': itemID}
+        newItem['itemName'] = 'TaTa'
+        newItem['attributes'] = []
+        for attr in attrs:
+            newItem['attributes'].append({'id' : attr, 'value' : 'not too sure what val'})
+
+        HandleItems.create_item_with_attrs(newItem)

@@ -36,15 +36,29 @@ class HandleItems(object):
 
     @classmethod
     def create_item_with_attrs(self, input):
-    #create item and populate its properties values.
+    #creates item and populate its properties values.
         itemT = ItemType.objects.get(id=input['itemTypeID'])
         item = self.create_item(input['itemName'], itemT)
 
         attributes = input['attributes']
 
         for attr in attributes:
-            attribute = Attribute.objects.get(attribute['id'])
-            self.create_item_attr_value(item, attribute, attribute['value'])
+            attribute = Attribute.objects.get(id=attr['id'])
+            self.create_item_attr_value(item, attribute, attr['value'])
+
+    @classmethod
+    def create_type_with_attrs(self, input):
+    #creates a new item type and its attributes and links them.
+        try:
+
+            itemType = self.create_itemType(input['itemType'], input['itemType'])
+            for attr in input['attributes']:
+                newAttr = self.create_attribute(attr['label'], attr['dataType'])
+                self.create_item_attr_relation(itemType, newAttr)
+
+            return True
+        except:
+            return False
 
     @classmethod
     def get_item_values(self, item):
@@ -59,33 +73,28 @@ class HandleItems(object):
             values[valueLabel] = value
 
     @classmethod
-    def get_item_type_attrs(self, itemType):
-    #returns a dict with attribute types: {attribute label: attribute type)
+    def get_item_type_attrs(self, itemTypeID):
+    #expects an itemType ID
+    #returns a dict with attribute types: {attribute id: attribute label)
+        itemType = ItemType.objects.get(id=itemTypeID)
         itAts = ItemAttribute.objects.all().filter(itemType=itemType)
         result = {}
 
         for itAt in itAts:
-            result[itAt.attribute.label] = itAt.attribute.dataType
+            result[itAt.attribute.id] = itAt.attribute.label
 
         return result
 
     @classmethod
-    def create_type_with_attrs(self, input):
-    #creates a new item type and its attributes and links them.
-        try:
-            itemType = input['itemType']
-
-            newItemType = self.create_itemType(itemType, itemType)
-
-            for attr in input['attributes']:
-                newAttr = self.create_attribute(attr['label'], attr['dataType'])
-                self.create_item_attr_relation(newItemType, newAttr)
-
-            return True
-        except:
-            return False
-
-    @classmethod
     def get_item_types(self):
-    #return all item types
-        return ItemType.objects.all()
+    #return all item types: {itemTypeID:ItemTypeName}
+        result = {}
+        for itemType in ItemType.objects.all():
+            result[itemType.id] = itemType.name
+        return result
+
+
+
+
+class HandleItemTypes(object):
+    pass
