@@ -36,14 +36,14 @@ class NEPBaseForm(BaseForm):
 			errors_on_separate_row=False)
 
 	def _html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
-		return super(NEPBaseModelForm, self)._html_output(normal_row, error_row, row_ender, help_text_html, errors_on_separate_row)
+		return super(NEPBaseForm, self)._html_output(normal_row, error_row, row_ender, help_text_html, errors_on_separate_row)
 
 class NEPForm(six.with_metaclass(DeclarativeFieldsMetaclass, NEPBaseForm)):
 	"This is the main form class for neptune forms."
 	# The following was pulled from djangos Form class. I followed their ways.
 	#
 	# This is a separate class from BaseForm in order to abstract the way
-    # self.fields is specified. This class (Form) is the one that does the
-    # fancy metaclass stuff purely for the semantic sugar -- it allows one
-    # to define a form using declarative syntax.
-    # BaseForm itself has no way of designating self.fields.	
+	# self.fields is specified. This class (Form) is the one that does the
+	# fancy metaclass stuff purely for the semantic sugar -- it allows one
+	# to define a form using declarative syntax.
+	# BaseForm itself has no way of designating self.fields.	

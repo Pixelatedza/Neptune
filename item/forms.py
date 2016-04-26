@@ -1,5 +1,7 @@
-from django import forms
+from nepcore import forms as nepForms # classes
+from django import forms # fields and widgets
 
-class ItemTypeForm(forms.Form):
-    item_type = forms.CharField(label='item type', max_length=100)
-    attributes = forms.CharField(label='attr', widget=forms.Textarea)
+class ItemTypeForm(nepForms.NEPForm):
+	itmeType = forms.CharField(max_length=50, label='Name')
+	attrName = forms.CharField(max_length=50, label='Name')
+	attrDataType = forms.CharField(max_length=50, label='Data Type')
