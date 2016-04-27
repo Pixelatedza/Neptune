@@ -26,15 +26,6 @@
 				this.lowerIndex = function(){
 					this.index = this.index - 1;
 				}
-				this.hasError = function(field){
-					console.log($scope.formErrors[this.index][field]);
-				}
-				this.clearErrors = function(field){
-					this.errors = {}
-				}
-
-
-
 			};
 
 			return {
@@ -50,7 +41,6 @@
 				$scope.formErrors = {};
 			// calling our submit function.
 				$scope.submitForm = function(url) {
-					console.log($scope.formData)
 					// Posting data to php file
 					$http({
 						method: 'POST',
@@ -59,7 +49,6 @@
 						}).then(function successCallback(response) {
 							$scope.formData = {};
 						}, function errorCallback(response) {
-							console.log("400")
 						});
 			};
 		});
@@ -69,19 +58,16 @@
 			$scope.forms = [DynamicForm.createNew(0)];
 			$scope.count = 1
 			$scope.removeForm = function(i){
-				console.log(i)
 				$scope.forms.splice(i, 1);
 				forms = $scope.forms.slice(i)
 				for (index in forms){
 					forms[index].lowerIndex();
 				};
-				console.log($scope.forms);
 				$scope.count = $scope.count - 1;
 			};
 			$scope.addForm = function(){
 				$scope.forms.push(DynamicForm.createNew($scope.count));
 				$scope.count = $scope.count + 1;
-				console.log($scope.forms);
 			};
 
 			// Submission of dynamic forms is a bit different to normal forms.
@@ -89,16 +75,6 @@
 				$scope.formData = {};
 				$scope.formErrors = {};
 
-			// Check if one of the dynamic forms have an error for a specific field
-				$scope.dynFieldHasError = function(index, field){
-					if($scope.formErrors.attributes[index][field]){
-						console.log("has-error")
-					}
-					else {
-						console.log("no error")
-					}
-					return ""
-				}
 			// calling our submit function.
 				$scope.submitForm = function(url) {
 					// add the dynamic forms data to the global form data.
@@ -119,7 +95,6 @@
 							$scope.count = 1
 						}, function errorCallback(response) {
 							$scope.formErrors = response.data
-							console.log($scope.formErrors);
 						});
 			};
 		});
@@ -183,12 +158,4 @@
 
 	{% block extra_js %}
 	{% endblock %}
-	<script>
-		$(document).ready(function(){
-		  $('input').iCheck({
-		    checkboxClass: 'icheckbox_minimal-blue',
-		    increaseArea: '20%' // optional
-		  });
-		});
-	</script>
 {% endblock body %}
