@@ -16,7 +16,25 @@
 					})
 				{% endfor %}
 			$urlRouterProvider.otherwise('index');
-		})
+		});
+
+		app.factory('DynamicForm', function(){
+			function DynamicFormInstance(index){
+				this.index = index;
+				this.formData = {};
+				this.lowerIndex = function(){
+					this.index = this.index - 1;
+				}
+
+
+			};
+
+			return {
+				createNew: function(index){
+					return new DynamicFormInstance(index);
+				}
+			};
+		});
 
 		app.controller('postController', function($scope, $http) {
 			// create a blank object to handle form data.
@@ -26,6 +44,53 @@
 				$scope.submitForm = function(url) {
 					console.log($scope.formData)
 					// Posting data to php file
+					$http({
+						method: 'POST',
+						url: url,
+						data: $scope.formData
+						}).then(function successCallback(response) {
+							$scope.formData = {};
+						}, function errorCallback(response) {
+							console.log("400")
+						});
+			};
+		});
+
+		app.controller('dynamicForms', function($scope, $http, DynamicForm) {
+			// This handles the forms html when adding and removing forms.
+			$scope.forms = [DynamicForm.createNew(0)];
+			$scope.count = 1
+			$scope.removeForm = function(i){
+				console.log(i)
+				$scope.forms.splice(i, 1);
+				forms = $scope.forms.slice(i)
+				for (index in forms){
+					forms[index].lowerIndex();
+				};
+				console.log($scope.forms);
+				$scope.count = $scope.count - 1;
+			};
+			$scope.addForm = function(){
+				$scope.forms.push(DynamicForm.createNew($scope.count));
+				$scope.count = $scope.count + 1;
+				console.log($scope.forms);
+			};
+
+			// Submission of dynamic forms is a bit different to normal forms.
+			// create a blank object to handle form data.
+				$scope.formData = {};
+				$scope.formErrors = {};
+			// calling our submit function.
+				$scope.submitForm = function(url) {
+					// add the dynamic forms data to the global form data.
+					$scope.formData.attributes = []
+					for (index in $scope.forms){
+						form = $scope.forms[index];
+						form.formData.index = form.index;
+						$scope.formData.attributes.push(form.formData);
+					};
+					console.log($scope.formData)
+					// Posting data to django as json
 					$http({
 						method: 'POST',
 						url: url,
@@ -78,23 +143,31 @@
 			  </div>
 			</nav>
 		</header>
-	</body>
-	<!-- </div> -->
-	{% block menu %}
-		<aside class="main-sidebar">
-			<!-- sidebar: style can be found in sidebar.less -->
-			<section class="sidebar">
-				{% autoescape off %}{{menu.render}}{% endautoescape on %}
-			</section>
-		</aside>
-	{% endblock %}
-	<!-- <div class="content-wrapper"> -->
-	<div class="content-wrapper" ui-view>
-		{% block content %}
+		<!-- </div> -->
+		{% block menu %}
+			<aside class="main-sidebar">
+				<!-- sidebar: style can be found in sidebar.less -->
+				<section class="sidebar">
+					{% autoescape off %}{{menu.render}}{% endautoescape on %}
+				</section>
+			</aside>
 		{% endblock %}
-	</div>
-	<!-- </div> -->
+		<!-- <div class="content-wrapper"> -->
+		<div class="content-wrapper" ui-view>
+			{% block content %}
+			{% endblock %}
+		</div>
+		<!-- </div> -->
+	</body>
 
 	{% block extra_js %}
 	{% endblock %}
+	<script>
+		$(document).ready(function(){
+		  $('input').iCheck({
+		    checkboxClass: 'icheckbox_minimal-blue',
+		    increaseArea: '20%' // optional
+		  });
+		});
+	</script>
 {% endblock body %}

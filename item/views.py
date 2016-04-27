@@ -7,24 +7,18 @@ from item.forms import ItemTypeForm, ItemTypeAttributesForm
 from item.apps import HandleItems
 
 class ItemTypeView(TemplateView):
+	"""View to create Item Types"""
+
 	template_name = "item/dev.html"
-	
+
 	def get(self, request):
-		context = {"itemTypeForm":ItemTypeForm(), "itemTypeAttributesForm":ItemTypeAttributesForm()}
+		context = {"itemTypeForm":ItemTypeForm()}
 		context['url'] = "/nepcore/item/"
 		return self.render_to_response(context)
 
 	def post(self, request):
 		data = json.loads(self.request.body)
-		itemTypeDef = {'itemType': data['itemType'], 'attributes': []}
-		del data['itemType']
-		for attr in data:
-			name = data[attr]['name']
-			dataType = data[attr]['dataType']
-			itemTypeDef['attributes'].append({'label':name,'dataType':dataType})
-		print itemTypeDef
 		return JsonResponse({'msg':'Invalid Username or Password'}, status=200)
-
 
 # HandleItems.create_type_with_attrs(d)
 class ItemView(FormView):

@@ -1,4 +1,4 @@
-<section class="content" ng-controller="postController">
+<section class="content" ng-controller="dynamicForms">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
@@ -13,47 +13,53 @@
 					<div class="box-header with-border">
 						<h3 class="box-title">Attributes</h3>
 					</div>
+
+					<!-- This ng-repeat is what controls the dynamic forms
+						 To use dynamic forms in this manner you must use the dynamicForms controller -->
+					<div class="box-body" ng-repeat="form in forms">
+						<div class="row form-group">
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrName_{[{form.index}]}">Name:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrName_{[{form.index}]}" maxlength="50" ng-model="form.formData.name" type="text">
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrDataType_{[{form.index}]}">Data Type:</label>
+								<div class="col-xs-9">
+									<select class="form-control" id="id_attrDataType_{[{form.index}]}" maxlength="50" ng-model="form.formData.dataType" type="text">
+										<option value="str">Text</option>
+										<option value="int">Numbers</option>
+										<option value="dat">Date</option>
+										<option value="time">Time</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-xs-1 col-xs-offset-1">
+								<button type="submit" class="btn btn-danger" ng-click="removeForm(form.index)"><i class="fa fa-trash"></i></button>
+							</div>							
+						</div>
+						<div class="row form-group">
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrReq_{[{form.index}]}">Required:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrReq_{[{form.index}]}" ng-model="form.formData.required" type="checkbox">
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrDef_{[{form.index}]}">Default:</label>
+								<div class="col-xs-9">
+									<input class="form-control minimal" id="id_attrDef_{[{form.index}]}" maxlength="50" ng-model="form.formData.default" type="text">
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End of ng-repeat -->
+
 					<div class="box-body">
-
-						<div class="row form-group">
-							<div class="col-xs-6">
-								<label class="col-xs-3 control-label" for="id_attrName_1">Name:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrName_1" maxlength="50" ng-model="formData.attr1.name" name="attrName_1" type="text">
-								</div>
-							</div>
-							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrDataType_1">Data Type:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrDataType_1" maxlength="50" ng-model="formData.attr1.dataType" name="attrDataType_1" type="text">
-								</div>
-							</div>
-							<div class="col-xs-1">
-								<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-							</div>
-						</div>
-
-						<div class="row form-group">
-							<div class="col-xs-6">
-								<label class="col-xs-3 control-label" for="id_attrName_2">Name:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrName_2" maxlength="50" ng-model="formData.attr2.name" name="attrName_2" type="text">
-								</div>
-							</div>
-							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrDataType_2">Data Type:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrDataType_2" maxlength="50" ng-model="formData.attr2.dataType" name="attrDataType_2" type="text">
-								</div>
-							</div>
-							<div class="col-xs-1">
-								<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
-							</div>
-						</div>
-
 						<div class="row form-group">
 							<div class="col-xs-1 col-xs-offset-11">
-								<button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+								<button type="button" class="btn btn-success" ng-click="addForm()"><i class="fa fa-plus"></i></button>
 							</div>
 						</div>
 					</div>

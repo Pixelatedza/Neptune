@@ -19,7 +19,9 @@ class BaseView(TemplateView):
 class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
 
-class LoginView(FormView):
+class LoginView(TemplateView):
+	template_name = 'nepcore/auth/login.html'
+
 	def get_context_data(self, **kwargs):
 		context = super(LoginView, self).get_context_data(**kwargs)
 		self.request.session.set_expiry(300)		
@@ -29,7 +31,7 @@ class LoginView(FormView):
 	def get(self, request):
 		context = self.get_context_data()
 		logout(self.request)
-		return  render(self.request,'nepcore/auth/login.html', context)
+		return self.render_to_response(context)
 
 	def post(self, request):
 		logout(self.request)
@@ -52,7 +54,8 @@ class LoginView(FormView):
 		else:
 			return JsonResponse({'msg':'Invalid Username or Password'}, status=400)
 
-class LogoutView(FormView):
+class LogoutView(TemplateView):
+	template_name = 'nepcore/auth/logout.html'
 
 	def get_context_data(self, **kwargs):
 		context = super(LogoutView, self).get_context_data(**kwargs)
@@ -62,4 +65,4 @@ class LogoutView(FormView):
 	def get(self, request):
 		context = self.get_context_data()
 		logout(request)		
-		return render(request, 'nepcore/auth/logout.html', context)
+		return self.render_to_response(context)
