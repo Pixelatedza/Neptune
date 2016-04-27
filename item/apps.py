@@ -63,7 +63,6 @@ class HandleItemTypes(Items):
         self.data = data
 
     def _validate_attributes(self, data):
-        sendBack = data
         errors = {}
         for attr in data:
             index = 0
@@ -97,7 +96,7 @@ class HandleItemTypes(Items):
                 attr_errors['required'] = 'No required given.'
 
             if not default:
-                sendBack['default'] = ''
+                attr['default'] = ''
             else:
                 #TODO VALIDATE AGAINST DATA TYPE
                 pass
@@ -105,7 +104,7 @@ class HandleItemTypes(Items):
             if attr_errors:
                 errors[index] = attr_errors
 
-        return sendBack, errors
+        return data, errors
 
     def is_valid(self):
         #validate input for dataType and attribute creation.
