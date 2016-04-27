@@ -97,8 +97,10 @@
 						data: $scope.formData
 						}).then(function successCallback(response) {
 							$scope.formData = {};
+							$scope.forms = [DynamicForm.createNew(0)]
+							$scope.count = 1
 						}, function errorCallback(response) {
-							console.log("400")
+							console.log(response);
 						});
 			};
 		});

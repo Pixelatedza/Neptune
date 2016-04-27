@@ -4,7 +4,7 @@ from django.views.generic.edit import FormView
 from django.http import JsonResponse
 import json
 from item.forms import ItemTypeForm, ItemTypeAttributesForm
-from item.apps import HandleItems
+from item.apps import HandleItemTypes
 
 class ItemTypeView(TemplateView):
 	"""View to create Item Types"""
@@ -18,7 +18,11 @@ class ItemTypeView(TemplateView):
 
 	def post(self, request):
 		data = json.loads(self.request.body)
-		return JsonResponse({'msg':'Invalid Username or Password'}, status=200)
+		HandleItemTypes(data)
+		if HandleItemTypes.is_valid():
+			return JsonResponse({'msg':'Succesfully created Item Type'}, status=200)
+		errors = HandleItemTypes.errors
+		return JsonResponse(errors, status=400)
 
 # HandleItems.create_type_with_attrs(d)
 class ItemView(FormView):
