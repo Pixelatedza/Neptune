@@ -18,10 +18,11 @@ class ItemTypeView(TemplateView):
 
 	def post(self, request):
 		data = json.loads(self.request.body)
-		HandleItemTypes(data)
-		if HandleItemTypes.is_valid():
+		hIT = HandleItemTypes(data)
+		if hIT.is_valid():
 			return JsonResponse({'msg':'Succesfully created Item Type'}, status=200)
-		errors = HandleItemTypes.errors
+		errors = hIT.errors
+		print errors
 		return JsonResponse(errors, status=400)
 
 # HandleItems.create_type_with_attrs(d)

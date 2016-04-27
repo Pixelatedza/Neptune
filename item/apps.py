@@ -109,25 +109,25 @@ class HandleItemTypes(Items):
     def is_valid(self):
         #validate input for dataType and attribute creation.
 
-        self.errors = []
+        self.errors = {}
         validated = True
 
         if 'itemType' in self.data:
             try:
                 ItemType.objects.get(name=self.data['itemType'])
-                self.errors.append({'itemType': 'itemType already exists.'})
+                self.errors['itemType'] ='itemType already exists.'
                 validated = False
             except:
                 pass
 
         data2, attrErrors = self._validate_attributes(self.data['attributes'])
-
+        self.data['attributes'] = data2
         if attrErrors:
-            self.errors.append({'attributes': attrErrors})
+            self.errors['attributes'] = attrErrors
             validated = False
 
         if validated:
-            self._create_type_with_attrs(data2)
+            self._create_type_with_attrs(self.data)
             return True
         else:
             return False
@@ -152,7 +152,8 @@ class HandleItemTypes(Items):
                     newAttr = self._create_attribute(attr['label'], attr['dataType'], attr['default'], attr['required'])
                     self._create_item_attr_relation(itemType, newAttr)
                 return True
-        except:
+        except Exception as e:
+            print e
             return False
 
     @classmethod
