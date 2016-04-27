@@ -23,6 +23,8 @@ class Attribute(models.Model):
 
     label = models.CharField(max_length=50)
     dataType = models.CharField(max_length=50, choices=ITEM_TYPES, default='str')
+    defaultValue = models.CharField(max_length=50)
+    required = models.BooleanField(default=False)
 
     def __str__(self):
         return self.label

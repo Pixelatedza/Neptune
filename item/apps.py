@@ -58,8 +58,11 @@ class HandleItems(Items):
 
 class HandleItemTypes(Items):
 
-    # def __init__(self):
-    #     self.errors = []
+    def __init__(self):
+        self.errors = []
+
+    def validate(self):
+        pass
 
     #private methods
     def _create_itemType(self, name, description):
@@ -67,11 +70,10 @@ class HandleItemTypes(Items):
         obj.save()
         return obj
 
-    def _create_attribute(self, label, dataType):
-        obj = Attribute(label=label, dataType=dataType)
+    def _create_attribute(self, label, dataType, defaultValue, required):
+        obj = Attribute(label=label, dataType=dataType, defaultValue=defaultValue, required=required)
         obj.save()
         return obj
-
 
     #public methods
     def create_type_with_attrs(self, input):
@@ -79,7 +81,7 @@ class HandleItemTypes(Items):
         try:
             itemType = self._create_itemType(input['itemType'], input['itemType'])
             for attr in input['attributes']:
-                newAttr = self._create_attribute(attr['label'], attr['dataType'])
+                newAttr = self._create_attribute(attr['label'], attr['dataType'], attr['default'], attr['required'])
                 self._create_item_attr_relation(itemType, newAttr)
             return True
         except:

@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+import sys
 
 from item.apps import HandleItems, HandleItemTypes
     #create_type_with_attrs, get_item_type_attrs, get_item_values,create_item_with_attrs
@@ -12,9 +13,9 @@ class Command(BaseCommand):
 
         #EXAMPLES:
 
-        FRIDGE = {'itemType': 'Car','attributes': [{'label': 'length', 'dataType': 'int'},
-                                     {'label': 'weight', 'dataType': 'int'},
-                                     {'label': 'colour', 'dataType': 'str'}]
+        FRIDGE = {'itemType': 'sd','attributes': [{'label': 'length', 'dataType': 'int', 'required': 'False', 'default':'def value'},
+                                     {'label': 'weight', 'dataType': 'int', 'required': 'False', 'default':'def value'},
+                                     {'label': 'colour', 'dataType': 'str', 'required': 'False', 'default':'def value'}]
                       }
         # create taskType and Attribute example:
         # typeHandler = HandleItemTypes()
