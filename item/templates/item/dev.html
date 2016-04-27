@@ -17,39 +17,59 @@
 					<!-- This ng-repeat is what controls the dynamic forms
 						 To use dynamic forms in this manner you must use the dynamicForms controller -->
 					<div class="box-body" ng-repeat="form in forms">
-						<div class="row form-group">
+						<div class="row">
 							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrName_{[{form.index}]}">Name:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrName_{[{form.index}]}" maxlength="50" ng-model="form.formData.label" type="text">
+								<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['label']}">
+									<label class="col-xs-3 control-label" for="id_attrName_{[{form.index}]}">Name:</label>
+									<div class="col-xs-9">
+										<input class="form-control" id="id_attrName_{[{form.index}]}" maxlength="50" ng-model="form.formData.label" type="text">
+										<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['label']}">
+											<span>{[{formErrors.attributes[form.index].label}]}</span>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrDataType_{[{form.index}]}">Data Type:</label>
-								<div class="col-xs-9">
-									<select class="form-control" id="id_attrDataType_{[{form.index}]}" maxlength="50" ng-model="form.formData.dataType" type="text">
-										<option value="str">Text</option>
-										<option value="int">Numbers</option>
-										<option value="dat">Date</option>
-										<option value="tim">Time</option>
-									</select>
+								<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['dataType']}">
+									<label class="col-xs-3 control-label" for="id_attrDataType_{[{form.index}]}">Data Type:</label>
+									<div class="col-xs-9">
+										<select class="form-control" id="id_attrDataType_{[{form.index}]}" maxlength="50" ng-model="form.formData.dataType" type="text">
+											<option value="str">Text</option>
+											<option value="int">Numbers</option>
+											<option value="dat">Date</option>
+											<option value="tim">Time</option>
+										</select>
+										<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['dataType']}">
+											<span>{[{formErrors.attributes[form.index].dataType}]}</span>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="col-xs-1 col-xs-offset-1">
 								<button type="submit" class="btn btn-danger" ng-click="removeForm(form.index)"><i class="fa fa-trash"></i></button>
 							</div>							
 						</div>
-						<div class="row form-group">
+						<div class="row">
 							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrReq_{[{form.index}]}">Required:</label>
-								<div class="col-xs-9">
-									<input class="form-control" id="id_attrReq_{[{form.index}]}" ng-model="form.formData.required" type="checkbox">
+								<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['required']}">
+									<label class="col-xs-3 control-label" for="id_attrReq_{[{form.index}]}">Required:</label>
+									<div class="col-xs-9">
+										<input class="form-control" id="id_attrReq_{[{form.index}]}" ng-model="form.formData.required" type="checkbox">
+										<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['required']}">
+											<span>{[{formErrors.attributes[form.index].required}]}</span>
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="col-xs-5">
-								<label class="col-xs-3 control-label" for="id_attrDef_{[{form.index}]}">Default:</label>
-								<div class="col-xs-9">
-									<input class="form-control minimal" id="id_attrDef_{[{form.index}]}" maxlength="50" ng-model="form.formData.default" type="text">
+								<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['default']}">
+									<label class="col-xs-3 control-label" for="id_attrDef_{[{form.index}]}">Default:</label>
+									<div class="col-xs-9">
+										<input class="form-control minimal" id="id_attrDef_{[{form.index}]}" maxlength="50" ng-model="form.formData.default" type="text">
+										<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['default']}">
+											<span>{[{formErrors.attributes[form.index].default}]}</span>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -57,7 +77,7 @@
 					<!-- End of ng-repeat -->
 
 					<div class="box-body">
-						<div class="row form-group">
+						<div class="row">
 							<div class="col-xs-1 col-xs-offset-11">
 								<button type="button" class="btn btn-success" ng-click="addForm()"><i class="fa fa-plus"></i></button>
 							</div>

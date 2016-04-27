@@ -22,9 +22,17 @@
 			function DynamicFormInstance(index){
 				this.index = index;
 				this.formData = {};
+				this.errors = {}
 				this.lowerIndex = function(){
 					this.index = this.index - 1;
 				}
+				this.hasError = function(field){
+					console.log($scope.formErrors[this.index][field]);
+				}
+				this.clearErrors = function(field){
+					this.errors = {}
+				}
+
 
 
 			};
@@ -80,6 +88,17 @@
 			// create a blank object to handle form data.
 				$scope.formData = {};
 				$scope.formErrors = {};
+
+			// Check if one of the dynamic forms have an error for a specific field
+				$scope.dynFieldHasError = function(index, field){
+					if($scope.formErrors.attributes[index][field]){
+						console.log("has-error")
+					}
+					else {
+						console.log("no error")
+					}
+					return ""
+				}
 			// calling our submit function.
 				$scope.submitForm = function(url) {
 					// add the dynamic forms data to the global form data.
@@ -89,7 +108,6 @@
 						form.formData.index = form.index;
 						$scope.formData.attributes.push(form.formData);
 					};
-					console.log($scope.formData)
 					// Posting data to django as json
 					$http({
 						method: 'POST',
@@ -100,7 +118,8 @@
 							$scope.forms = [DynamicForm.createNew(0)]
 							$scope.count = 1
 						}, function errorCallback(response) {
-							console.log(response);
+							$scope.formErrors = response.data
+							console.log($scope.formErrors);
 						});
 			};
 		});
