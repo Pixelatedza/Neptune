@@ -6,7 +6,8 @@
 			$state.transitionTo('index');
 		}])
 
-		app.config(function($stateProvider, $urlRouterProvider){
+		app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
+			$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 			$stateProvider
 				{% for state in state_manager.states %}
 					.state('{{state.name}}', {
@@ -16,6 +17,26 @@
 				{% endfor %}
 			$urlRouterProvider.otherwise('index');
 		})
+
+		app.controller('postController', function($scope, $http) {
+			// create a blank object to handle form data.
+				$scope.formData = {};
+				$scope.formErrors = {};
+			// calling our submit function.
+				$scope.submitForm = function(url) {
+					console.log($scope.formData)
+					// Posting data to php file
+					$http({
+						method: 'POST',
+						url: url,
+						data: $scope.formData
+						}).then(function successCallback(response) {
+							$scope.formData = {};
+						}, function errorCallback(response) {
+							console.log("400")
+						});
+			};
+		});
 	</script>
 {% endblock %}
 

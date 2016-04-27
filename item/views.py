@@ -1,30 +1,32 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-from item.forms import ItemTypeForm
+from django.http import JsonResponse
+import json
+from item.forms import ItemTypeForm, ItemTypeAttributesForm
 from item.apps import HandleItems
 
-def tempf(d):
-	print d
-
-class ItemTypeView(FormView):
+class ItemTypeView(TemplateView):
 	template_name = "item/dev.html"
-	form_class = ItemTypeForm
-	success_url = '/nepcore/item/'
+	
+	def get(self, request):
+		context = {"itemTypeForm":ItemTypeForm(), "itemTypeAttributesForm":ItemTypeAttributesForm()}
+		context['url'] = "/nepcore/item/"
+		return self.render_to_response(context)
 
-	def form_valid(self, form):
-		#print form.data
-		d = {}
-		d['itemType'] = form.data['itemType']
-		d['attributes'] = []
-		attributes = form.data['attributes'].split(',')
-		for p in attributes:
-			li = p.split('-')
-			d['attributes'].append({'label':li[0],'dataType':li[1]})
-		#d['attributes'] = form.data['attributes'].split(',')
-		HandleItems.create_type_with_attrs(d)
-		return super(ItemTypeView, self).form_valid(form)
+	def post(self, request):
+		data = json.loads(self.request.body)
+		itemTypeDef = {'itemType': data['itemType'], 'attributes': []}
+		del data['itemType']
+		for attr in data:
+			name = data[attr]['name']
+			dataType = data[attr]['dataType']
+			itemTypeDef['attributes'].append({'label':name,'dataType':dataType})
+		print itemTypeDef
+		return JsonResponse({'msg':'Invalid Username or Password'}, status=200)
 
+
+# HandleItems.create_type_with_attrs(d)
 class ItemView(FormView):
 	template_name = "item/dev.html"
 	form_class = ItemTypeForm
@@ -40,5 +42,5 @@ class ItemView(FormView):
 			li = p.split('-')
 			d['attributes'].append({'label':li[0],'_type':li[1]})
 		#d['attributes'] = form.data['attributes'].split(',')
-		tempf(d)
+		#tempf(d)
 		return super(IndexView, self).form_valid(form)

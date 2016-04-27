@@ -1,18 +1,68 @@
-<section class="content">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Item Form?</h3>
-                </div>
-                <form class="form-horizontal" action='/nepcore/item/' method='POST'>
-                    <div class="box-body">
-                        {% csrf_token %}
-                        {{form.as_bootstrap}}
-                        <input type="submit" value="Submit" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<section class="content" ng-controller="postController">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<form class="form-horizontal" ng-submit="submitForm('{{url}}')">
+					{% csrf_token %}
+					<div class="box-header with-border">
+						<h3 class="box-title">Item Type</h3>
+					</div>
+					<div class="box-body">
+						{{itemTypeForm.as_bootstrap}}
+					</div>
+					<div class="box-header with-border">
+						<h3 class="box-title">Attributes</h3>
+					</div>
+					<div class="box-body">
+
+						<div class="row form-group">
+							<div class="col-xs-6">
+								<label class="col-xs-3 control-label" for="id_attrName_1">Name:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrName_1" maxlength="50" ng-model="formData.attr1.name" name="attrName_1" type="text">
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrDataType_1">Data Type:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrDataType_1" maxlength="50" ng-model="formData.attr1.dataType" name="attrDataType_1" type="text">
+								</div>
+							</div>
+							<div class="col-xs-1">
+								<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-xs-6">
+								<label class="col-xs-3 control-label" for="id_attrName_2">Name:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrName_2" maxlength="50" ng-model="formData.attr2.name" name="attrName_2" type="text">
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<label class="col-xs-3 control-label" for="id_attrDataType_2">Data Type:</label>
+								<div class="col-xs-9">
+									<input class="form-control" id="id_attrDataType_2" maxlength="50" ng-model="formData.attr2.dataType" name="attrDataType_2" type="text">
+								</div>
+							</div>
+							<div class="col-xs-1">
+								<button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-xs-1 col-xs-offset-11">
+								<button type="submit" class="btn btn-success"><i class="fa fa-plus"></i></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="box-footer">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </section>
