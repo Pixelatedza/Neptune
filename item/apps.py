@@ -58,11 +58,80 @@ class HandleItems(Items):
 
 class HandleItemTypes(Items):
 
-    def __init__(self):
+    def __init__(self, data):
         self.errors = []
+        self.data = data
 
-    def validate(self):
-        pass
+    def _validate_attributes(self, data):
+        sendBack = data
+        errors = {}
+        for attr in data:
+            index = 0
+            attr_errors = {}
+            label= ''
+            dataType= ''
+            required= ''
+            default= ''
+            for k, v in attr.iteritems():
+                if k == 'index':
+                    index = v
+                elif k == 'label':
+                    label = v
+                elif k == 'dataType':
+                    dataType = v
+                elif k == 'required':
+                    required = v
+                elif k == 'default':
+                    default = v
+
+            if not label:
+                attr_errors['label'] = 'No label given.'
+
+            if not dataType:
+                attr_errors['dataType'] = 'No dataType given.'
+            elif dataType not in ['str', 'int', 'dat', 'tim']:
+                print dataType
+                attr_errors['dataType'] = 'dataType not allowed.'
+
+            if not required:
+                attr_errors['required'] = 'No required given.'
+
+            if not default:
+                sendBack['default'] = ''
+            else:
+                #TODO VALIDATE AGAINST DATA TYPE
+                pass
+
+            if attr_errors:
+                errors[index] = attr_errors
+
+        return sendBack, errors
+
+    def is_valid(self):
+        #validate input for dataType and attribute creation.
+
+        self.errors = []
+        validated = True
+
+        if 'itemType' in self.data:
+            try:
+                ItemType.objects.get(name=self.data['itemType'])
+                self.errors.append({'itemType': 'itemType already exists.'})
+                validated = False
+            except:
+                pass
+
+        data2, attrErrors = self._validate_attributes(self.data['attributes'])
+
+        if attrErrors:
+            self.errors.append({'attributes': attrErrors})
+            validated = False
+
+        if validated:
+            self._create_type_with_attrs(data2)
+            return True
+        else:
+            return False
 
     #private methods
     def _create_itemType(self, name, description):
@@ -76,14 +145,14 @@ class HandleItemTypes(Items):
         return obj
 
     #public methods
-    def create_type_with_attrs(self, input):
+    def _create_type_with_attrs(self, input):
     #creates a new item type and its attributes and links them.
         try:
-            itemType = self._create_itemType(input['itemType'], input['itemType'])
-            for attr in input['attributes']:
-                newAttr = self._create_attribute(attr['label'], attr['dataType'], attr['default'], attr['required'])
-                self._create_item_attr_relation(itemType, newAttr)
-            return True
+                itemType = self._create_itemType(input['itemType'], input['itemType'])
+                for attr in input['attributes']:
+                    newAttr = self._create_attribute(attr['label'], attr['dataType'], attr['default'], attr['required'])
+                    self._create_item_attr_relation(itemType, newAttr)
+                return True
         except:
             return False
 

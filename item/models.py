@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+
 
 class ItemType(models.Model):
     #different item types
@@ -17,9 +19,11 @@ class Item(models.Model):
 
 class Attribute(models.Model):
     #different properties
+
     ITEM_TYPES = (('str', 'String'),
-                  ('int', 'Integer'),
-                  ('date', 'Date'))
+              ('int', 'Integer'),
+              ('dat', 'Date'),
+              ('tim', 'Time'))
 
     label = models.CharField(max_length=50)
     dataType = models.CharField(max_length=50, choices=ITEM_TYPES, default='str')
