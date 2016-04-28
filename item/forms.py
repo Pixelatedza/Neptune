@@ -4,6 +4,6 @@ from django import forms # fields and widgets
 class ItemTypeForm(nepForms.NEPForm):
 	itemType = forms.CharField(max_length=50, label='Name')
 
-class ItemTypeAttributesForm(nepForms.NEPForm):
-	attrName = forms.CharField(max_length=50, label='Name')
-	attrDataType = forms.CharField(max_length=50, label='Data Type')
+class ItemForm(nepForms.NEPForm):
+	attr1 = forms.CharField(max_length=50, label='Attr1')
+	attr2 = forms.IntegerField(label='Attr2')
