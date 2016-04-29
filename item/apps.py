@@ -165,14 +165,19 @@ class HandleItemTypes(Items):
         return result
 
     @classmethod
-    def get_item_type_attrs(self, itemTypeID):
-    #expects an itemType ID
-    #returns a dict with attribute types: {attribute id: attribute label)
-        itemType = ItemType.objects.get(id=itemTypeID)
+    def get_item_type_attrs(self, itemTypeName):
+    #expects an itemType name
+    #returns a dict with attribute types as follows:
+
+        fields = []
+        itemType = ItemType.objects.get(name=itemTypeName)
         itAts = ItemAttribute.objects.all().filter(itemType=itemType)
         result = {}
 
         for itAt in itAts:
-            result[itAt.attribute.id] = itAt.attribute.label
+            attr = itAt.attribute
+            fields.append({'fieldId': attr.id,
+                           'dataType': attr.dataType,
+                           'label': attr.label})
 
-        return result
+        return {'itemTypeId': itemType.id, 'fields': fields}
