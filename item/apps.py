@@ -17,9 +17,9 @@ class Items(object):
         try:
             field = CUSTOM_FIELD_MAP[dataType]()
             field.clean(data)
-            return True
-        except:
             return False
+        except Exception as e:
+            return e.msg
 
 class HandleItems(Items):
 
@@ -31,28 +31,29 @@ class HandleItems(Items):
         errors = {}
         for attr in data:
             attr_errors= {}
-            id = '?'
+            _id = '?'
             value= ''
 
             for k, v in attr.iteritems():
                 if k == 'id':
-                    id = v
+                    _id = v
                 elif k == 'value':
                     value = v
 
-            if id == '?':
+            if _id == '?':
                 attr_errors['id'] = 'No ID for attribute given..'
 
             if not value:
                 attr_errors['value'] = 'No value given for attribute.'
 
             if attr_errors:
-                errors[id] = attr_errors
+                errors[_id] = attr_errors
             else:
-                attribute = Attribute.objects.get().filter(id=id)
-                if not self._is_valid_data(attribute.type, value):
-                    attr_errors['value'] = '%s not a valid value of %s' % (value, attribute.type)
-                    errors[id] = attr_errors
+                attribute = Attribute.objects.get().filter(id=_id)
+                error = self._not_valid_data(attribute.type, value)
+                if error:
+                    attr_errors['value'] = error
+                    errors[_id] = attr_errors
 
         return data, errors
 
@@ -200,8 +201,9 @@ class HandleItemTypes(Items):
                 attr['default'] = ''
             else:
                 if dataType:
-                    if not self._is_valid_data(dataType, default):
-                        attr_errors['default'] = 'Default value %s not of type %s' % (default, dataType)
+                    error = self._is_valid_data(dataType, default)
+                    if error:
+                        attr_errors['default'] = error
 
             if not required:
                 attr_errors['required'] = 'No required given.'
@@ -285,8 +287,9 @@ class HandleItemTypes(Items):
 
         for itAt in itAts:
             attr = itAt.attribute
+            print attr.dataType
             fields.append({'fieldId': attr.id,
                            'dataType': attr.dataType,
                            'label': attr.label})
 
-        return {'itemTypeId': itemType.id, 'fields': fields}
+        return fields

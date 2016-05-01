@@ -4,7 +4,7 @@ from django.views.generic.edit import FormView
 from django.http import JsonResponse
 import json
 from item.forms import ItemTypeForm, ItemForm
-from item.apps import HandleItemTypes
+from item.apps import HandleItemTypes, HandleItems
 from django import forms as djForms
 from nepcore.forms.fields import CUSTOM_FIELD_MAP
 
@@ -37,19 +37,21 @@ class CreateItemView(TemplateView):
 
 	def get(self, request):
 		form = ItemForm()
-		form.fields['attr3'] = CUSTOM_FIELD_MAP['int'](label="Attr3")
-		print dir(form)
-		print form.fields
+		fields = HandleItemTypes.get_item_type_attrs('Item 1')
+		for field in fields:
+			form.fields[str(field['fieldId'])] = CUSTOM_FIELD_MAP[field['dataType']](label=field['label'])
 		context = {"itemForm":form}
 		context['url'] = "/nepcore/item/create/"
 		return self.render_to_response(context)
 
 	def post(self, request):
 		data = json.loads(self.request.body)
+		print data
 		handleItem = HandleItems(data)
-		if handleItemTypes.is_valid():
-			return JsonResponse({'msg':'Succesfully created Item'}, status=200)
-		errors = handleItemTypes.errors
+		# if handleItemTypes.is_valid():
+		# 	return JsonResponse({'msg':'Succesfully created Item'}, status=200)
+		errors = handleItem.errors
+		errors = {}
 		return JsonResponse(errors, status=400)
 
 
