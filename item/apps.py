@@ -52,7 +52,7 @@ class HandleItems(Items):
                     attr_errors['error'] = error
                     errors[_id] = attr_errors
 
-        return data, errors
+        return errors
 
     def is_valid(self):
         #validate input for item creation.
@@ -91,8 +91,8 @@ class HandleItems(Items):
             del temp['itemName']
 
 
-        data2, attrErrors = self._validate_attributes(temp)
-        temp = data2
+        attrErrors = self._validate_attributes(temp)
+
         if attrErrors:
             self.errors['attributes'] = attrErrors
             validated = False
@@ -115,11 +115,12 @@ class HandleItems(Items):
         itemT = ItemType.objects.get(id=data['itemType'])
         item = self._create_item(data['itemName'], itemT)
 
-        attributes = data['attributes']
+        del data['itemType']
+        del data['itemName']
 
-        for attr in attributes:
-            attribute = Attribute.objects.get(id=attr['id'])
-            self._create_item_attr_value(item, attribute, attr['value'])
+        for k, v in data.iteritems():
+            attribute = Attribute.objects.get(id=k)
+            self._create_item_attr_value(item, attribute, v)
 
     @classmethod
     def get_item_values(self, itemID):
