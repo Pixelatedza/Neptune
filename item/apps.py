@@ -29,19 +29,16 @@ class HandleItems(Items):
 
     def _validate_attributes(self, data):
         errors = {}
-        for attr in data:
-            attr_errors= {}
-            _id = '?'
-            value= ''
 
-            for k, v in attr.iteritems():
-                if k == 'id':
-                    _id = v
-                elif k == 'value':
-                    value = v
+        for k, v in data.iteritems():
+            _id = k
+            value = v
+            attr_errors = {}
 
-            if _id == '?':
-                attr_errors['id'] = 'No ID for attribute given..'
+            try:
+                attr = Attribute.objects.get(id=_id)
+            except:
+                attr_errors[_id] = 'No attributes exist with given id.'
 
             if not value:
                 attr_errors['value'] = 'No value given for attribute.'
@@ -49,10 +46,10 @@ class HandleItems(Items):
             if attr_errors:
                 errors[_id] = attr_errors
             else:
-                attribute = Attribute.objects.get().filter(id=_id)
-                error = self._not_valid_data(attribute.type, value)
+                error = self._is_valid_data(attr.type, value)
                 if error:
-                    attr_errors['value'] = error
+                    attr_errors['value'] = value
+                    attr_errors['error'] = error
                     errors[_id] = attr_errors
 
         return data, errors
@@ -65,20 +62,18 @@ class HandleItems(Items):
 
         #expected input:
         # {
-        #     'itemType': 'name',
-        #     'itemName': 'name',
-        #     'attributes': [{
-        #         'id': 0,
-        #         'value': 'value'
-        #     },{
-        #         'id': 1,
-        #         'value': 'value'
-        #     }]
+        #   ‘itemType’: ‘1’,
+        #   ‘itemName’: ‘320d’,
+        #   ‘232’: ‘grey’,
+        #   ’23’: ‘The fastest’,
+        #   ’28’: ‘Greater than merc’
         # }
 
-        if 'itemType' in self.data:
+        temp = self.data
+
+        if 'itemType' in temp:
             try:
-                ItemType.objects.get(name=self.data['itemType'])
+                ItemType.objects.get(id=temp['itemType'])
                 self.errors['itemType'] ='itemType already exists.'
                 validated = False
             except:
@@ -87,12 +82,17 @@ class HandleItems(Items):
             self.errors['itemType'] = 'No itemType given.'
             validated = False
 
-        if 'itemName' not in self.data:
+        del temp['itemType']
+
+        if 'itemName' not in temp:
             self.errors['itemName'] = 'No itemName given.'
             validated = False
+        else:
+            del temp['itemName']
 
-        data2, attrErrors = self._validate_attributes(self.data['attributes'])
-        self.data['attributes'] = data2
+
+        data2, attrErrors = self._validate_attributes(temp)
+        temp = data2
         if attrErrors:
             self.errors['attributes'] = attrErrors
             validated = False
@@ -112,7 +112,7 @@ class HandleItems(Items):
     #public methods
     def _create_item_with_attributes(self, data):
     #creates item and populate its properties values.
-        itemT = ItemType.objects.get(name=data['itemType'])
+        itemT = ItemType.objects.get(id=data['itemType'])
         item = self._create_item(data['itemName'], itemT)
 
         attributes = data['attributes']
