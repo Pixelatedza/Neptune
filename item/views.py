@@ -8,6 +8,14 @@ from item.apps import HandleItemTypes, HandleItems
 from django import forms as djForms
 from nepcore.forms.fields import CUSTOM_FIELD_MAP
 
+class SelectItemTypeView(TemplateView):
+	template_name = "item/select_item_type.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(SelectItemTypeView, self).get_context_data(**kwargs)
+		context["itemTypes"] = HandleItemTypes.get_all_item_types()
+		return context
+
 class CreateItemTypeView(TemplateView):
 	"""View to create Item Types"""
 	# TODO: I would like for the attribute form (dynamic form) to also work
@@ -33,43 +41,22 @@ class CreateItemTypeView(TemplateView):
 class CreateItemView(TemplateView):
 	"""View to create Items"""
 
-	template_name = "item/dev.html"
+	template_name = "item/create_item.html"
 
-	def get(self, request):
-		form = ItemForm()
-		fields = HandleItemTypes.get_item_type_attrs('Item 1')
+	def get(self, request, itemName=None):
+		form = ItemForm(initial={'itemType': itemName})
+		fields = HandleItemTypes.get_item_type_attrs(itemName)
 		for field in fields:
 			form.fields[str(field['fieldId'])] = CUSTOM_FIELD_MAP[field['dataType']](label=field['label'])
 		context = {"itemForm":form}
+		context["itemName"] = itemName
 		context['url'] = "/nepcore/item/create/"
 		return self.render_to_response(context)
 
 	def post(self, request):
 		data = json.loads(self.request.body)
-		print data
 		handleItem = HandleItems(data)
-		# if handleItemTypes.is_valid():
-		# 	return JsonResponse({'msg':'Succesfully created Item'}, status=200)
+		if handleItem.is_valid():
+			return JsonResponse({'msg':'Succesfully created Item'}, status=200)
 		errors = handleItem.errors
-		errors = {}
 		return JsonResponse(errors, status=400)
-
-
-# HandleItems.create_type_with_attrs(d)
-class ItemView(FormView):
-	template_name = "item/dev.html"
-	form_class = ItemTypeForm
-	success_url = '/nepcore/item/'
-
-	def form_valid(self, form):
-		#print form.data
-		d = {}
-		d['itemType'] = form.data['itemType']
-		d['attributes'] = []
-		attributes = form.data['attributes'].split(',')
-		for p in attributes:
-			li = p.split('-')
-			d['attributes'].append({'label':li[0],'_type':li[1]})
-		#d['attributes'] = form.data['attributes'].split(',')
-		#tempf(d)
-		return super(IndexView, self).form_valid(form)

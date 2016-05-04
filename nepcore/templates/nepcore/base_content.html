@@ -11,8 +11,16 @@
 			$stateProvider
 				{% for state in state_manager.states %}
 					.state('{{state.name}}', {
-						url: '{{state.name}}',
-						templateUrl: '{{state.link}}'
+						url: '{{state.url}}',
+						
+						{% if state.params %}
+						templateUrl: function($stateParams){
+							return '{{state.link}}' + $stateParams.itemName
+						}
+						{% else %}
+						templateUrl: '{{state.link}}',
+						{% endif %}
+
 					})
 				{% endfor %}
 			$urlRouterProvider.otherwise('index');
@@ -48,7 +56,9 @@
 						data: $scope.formData
 						}).then(function successCallback(response) {
 							$scope.formData = {};
+							$scope.formErrors = {};
 						}, function errorCallback(response) {
+							$scope.formErrors = response.data;
 						});
 			};
 		});
@@ -91,10 +101,11 @@
 						data: $scope.formData
 						}).then(function successCallback(response) {
 							$scope.formData = {};
-							$scope.forms = [DynamicForm.createNew(0)]
-							$scope.count = 1
+							$scope.forms = [DynamicForm.createNew(0)];
+							$scope.count = 1;
+							$scope.formErrors = {};
 						}, function errorCallback(response) {
-							$scope.formErrors = response.data
+							$scope.formErrors = response.data;
 						});
 			};
 		});

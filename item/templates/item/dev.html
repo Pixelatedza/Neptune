@@ -2,18 +2,16 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
-				<form class="form-horizontal" ng-submit="submitForm('{{url}}')">
-					{% csrf_token %}
-					<div class="box-header with-border">
-						<h3 class="box-title">Item</h3>
-					</div>
-					<div class="box-body">
-						{{itemForm.as_bootstrap}}
-					</div>
-					<div class="box-footer">
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</form>
+				<div class="box-header with-border">
+					<h3 class="box-title">Item Types</h3>
+				</div>
+				<div class="box-body">
+					{% for item in itemTypes %}
+						<span>{{item}}</span>
+						<span>{{itemTypes[item]}}</span>
+						<span>------------</span>
+					{% endfor %}
+				</div>
 			</div>
 		</div>
 	</div>

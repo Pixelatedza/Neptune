@@ -5,4 +5,5 @@ class ItemTypeForm(nepForms.NEPForm):
 	itemType = forms.CharField(max_length=50, label='Name')
 
 class ItemForm(nepForms.NEPForm):
-	pass
+	itemType = forms.CharField(widget=forms.HiddenInput())
+	itemName = forms.CharField(max_length=50, label='Name')

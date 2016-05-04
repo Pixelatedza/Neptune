@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from nepcore.forms.fields import CUSTOM_FIELD_MAP
 
 from item.models import ItemType, Item, Attribute, ItemAttribute, ItemAttributeValue
@@ -18,14 +19,42 @@ class Items(object):
             field = CUSTOM_FIELD_MAP[dataType]()
             field.clean(data)
             return False
-        except Exception as e:
-            return e.msg
+        except ValidationError as e:
+            return e.messages[0]
 
 class HandleItems(Items):
 
     def __init__(self, data):
         self.data = data
         self.errors = []
+
+    def _validate_single_fields(self, data):
+    # TEMP: Ek het die net gemaak om singular fields wat nie van 'n dynamic form
+    # af kom nie te validate. Dis basically presies dieselfde as jou onderste function.
+    # Net gemaak om my form verder te kry, Ek dink ons het verby mekaar gepraat.
+        errors = {}
+
+        for k, v in data.iteritems():
+            _id = k
+            value = v
+            attr_errors = {}
+
+            try:
+                attr = Attribute.objects.get(id=_id)
+            except:
+                attr_errors[_id] = 'No attributes exist with given id.'
+
+            if not value:
+                attr_errors['value'] = 'No value given for attribute.'
+
+            if attr_errors:
+                errors[_id] = attr_errors
+            else:
+                error = self._is_valid_data(attr.dataType, value)
+                if error:
+                    errors[_id] = error
+
+        return errors
 
     def _validate_attributes(self, data):
         errors = {}
@@ -46,11 +75,11 @@ class HandleItems(Items):
             if attr_errors:
                 errors[_id] = attr_errors
             else:
-                error = self._is_valid_data(attr.type, value)
+                error = self._is_valid_data(attr.dataType, value)
                 if error:
                     attr_errors['value'] = value
                     attr_errors['error'] = error
-                    errors[_id] = attr_errors
+                    errors[_id] = error
 
         return errors
 
@@ -62,22 +91,21 @@ class HandleItems(Items):
 
         #expected input:
         # {
-        #   ‘itemType’: ‘1’,
-        #   ‘itemName’: ‘320d’,
-        #   ‘232’: ‘grey’,
-        #   ’23’: ‘The fastest’,
-        #   ’28’: ‘Greater than merc’
+        #   'itemType': '1',
+        #   'itemName': '320d',
+        #   '232': 'almost grey',
+        #   '23': 'The fastest diesel',
+        #   '28': 'Greater than beetle'
         # }
 
-        temp = self.data
+        temp = self.data.copy()
 
         if 'itemType' in temp:
             try:
                 ItemType.objects.get(id=temp['itemType'])
-                self.errors['itemType'] ='itemType already exists.'
-                validated = False
             except:
-                pass
+                self.errors['itemType'] ='itemType does not exist.'
+                validated = False
         else:
             self.errors['itemType'] = 'No itemType given.'
             validated = False
@@ -91,14 +119,15 @@ class HandleItems(Items):
             del temp['itemName']
 
 
-        attrErrors = self._validate_attributes(temp)
+        attrErrors = self._validate_single_fields(temp)
 
+        # Ek het die verander want die is direkte fields nie dynamic form fields nie.
         if attrErrors:
-            self.errors['attributes'] = attrErrors
+            self.errors = attrErrors
             validated = False
 
         if validated:
-            self._create_item_with_attributes(self, self.data)
+            self._create_item_with_attributes(self.data)
             return True
         else:
             return False
@@ -288,7 +317,6 @@ class HandleItemTypes(Items):
 
         for itAt in itAts:
             attr = itAt.attribute
-            print attr.dataType
             fields.append({'fieldId': attr.id,
                            'dataType': attr.dataType,
                            'label': attr.label})

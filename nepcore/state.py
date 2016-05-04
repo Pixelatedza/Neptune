@@ -26,7 +26,9 @@ class StateObj(StateManager):
 	def __init__(self, *args, **kwargs):
 		super(StateObj, self).__init__(*args, **kwargs)
 		self.name = kwargs.get('name', None)
+		self.url = kwargs.get('url', self.name)
 		self.link = kwargs.get('link', None)
+		self.params = kwargs.get('params', None)
 
 	def __str__(self):
 		return self.name
