@@ -8,12 +8,13 @@ from item.apps import HandleItemTypes, HandleItems
 from django import forms as djForms
 from nepcore.forms.fields import CUSTOM_FIELD_MAP
 
-class SelectItemTypeView(TemplateView):
-	template_name = "item/select_item_type.html"
+class ItemView(TemplateView):
+	template_name = "item/items.html"
 
 	def get_context_data(self, **kwargs):
-		context = super(SelectItemTypeView, self).get_context_data(**kwargs)
+		context = super(ItemView, self).get_context_data(**kwargs)
 		context["itemTypes"] = HandleItemTypes.get_all_item_types()
+		context["items"] = HandleItems.get_all_items()
 		return context
 
 class CreateItemTypeView(TemplateView):
@@ -28,6 +29,7 @@ class CreateItemTypeView(TemplateView):
 	def get(self, request):
 		context = {"itemTypeForm":ItemTypeForm()}
 		context['url'] = "/nepcore/item/create/item-type/"
+		context["itemTypes"] = HandleItemTypes.get_all_item_types()
 		return self.render_to_response(context)
 
 	def post(self, request):

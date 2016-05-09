@@ -14,6 +14,7 @@ class BaseView(TemplateView):
 		context = super(BaseView, self).get_context_data(**kwargs)
 		context['menu'] = menu
 		context['state_manager'] = state_manager
+		print context['view'].request.user
 		return context
 
 class IndexView(TemplateView):
