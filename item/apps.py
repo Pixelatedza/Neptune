@@ -219,13 +219,13 @@ class HandleItemTypes(Items):
             if not label:
                 attr_errors['label'] = 'No label given.'
 
-            dataType = True
+            #dataType = True
             if not dataType:
                 attr_errors['dataType'] = 'No dataType given.'
-                dataType = False
+                #dataType = False
             elif dataType not in ['str', 'int', 'dat', 'tim']:
                 attr_errors['dataType'] = 'dataType not allowed.'
-                dataType = False
+                #dataType = False
 
             if not default:
                 attr['default'] = ''
@@ -235,8 +235,9 @@ class HandleItemTypes(Items):
                     if error:
                         attr_errors['default'] = error
 
-            if not required:
-                attr_errors['required'] = 'No required given.'
+            ## Requried is nie 'n required field nie?
+            # if not required:
+            #     attr_errors['required'] = 'No required given.'
 
             if attr_errors:
                 errors[index] = attr_errors
@@ -289,7 +290,7 @@ class HandleItemTypes(Items):
         try:
                 itemType = self._create_itemType(input['itemType'], input['itemType'])
                 for attr in input['attributes']:
-                    newAttr = self._create_attribute(attr['label'], attr['dataType'], attr['default'], attr['required'])
+                    newAttr = self._create_attribute(attr['label'], attr['dataType'], attr.get('default',None), attr.get('required',False))
                     self._create_item_attr_relation(itemType, newAttr)
                 return True
         except Exception as e:
@@ -315,10 +316,11 @@ class HandleItemTypes(Items):
         itAts = ItemAttribute.objects.all().filter(itemType=itemType)
         result = {}
 
-        for itAt in itAts:
-            attr = itAt.attribute
-            fields.append({'fieldId': attr.id,
-                           'dataType': attr.dataType,
-                           'label': attr.label})
+        ## Die is baie meer generic en useful vir my as jy die itAts direk return.
+        # for itAt in itAts:
+        #     attr = itAt.attribute
+        #     fields.append({'fieldId': attr.id,
+        #                    'dataType': attr.dataType,
+        #                    'label': attr.label})
 
-        return fields
+        return itAts

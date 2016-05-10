@@ -27,18 +27,18 @@
 		});
 
 		app.factory('DynamicForm', function(){
-			function DynamicFormInstance(index){
+			function DynamicFormInstance(index, formData={}){
 				this.index = index;
-				this.formData = {};
-				this.errors = {}
+				this.formData = formData;
+				this.errors = {};
 				this.lowerIndex = function(){
 					this.index = this.index - 1;
 				}
 			};
 
 			return {
-				createNew: function(index){
-					return new DynamicFormInstance(index);
+				createNew: function(index, formData){
+					return new DynamicFormInstance(index, formData);
 				}
 			};
 		});
@@ -56,6 +56,25 @@
 				});
 			};
 		});
+
+		app.controller('copyItemType', function($scope, $http) {
+			// create a blank object to handle form data.
+				$scope.fields = {};
+			// calling our submit function.
+				$scope.getItemTypeFields = function(url) {
+					// Posting data to php file
+					$http({
+						method: 'POST',
+						url: "/nepcore/item/get/item-type-fields/",
+						data: $scope.formData
+						}).then(function successCallback(response) {
+							$scope.fields = response.data;
+							console.log($scope.fields)
+						}, function errorCallback(response) {
+						});
+			};
+		});
+
 
 		app.controller('postController', function($scope, $http) {
 			// create a blank object to handle form data.
@@ -78,6 +97,28 @@
 		});
 
 		app.controller('dynamicForms', function($scope, $http, DynamicForm) {
+			// create a blank object to handle form data.
+			// calling our submit function.
+			$scope.getItemTypeFields = function(itemName) {
+				// Posting data to php file
+				$http({
+					method: 'POST',
+					url: "/nepcore/item/get/item-type-fields/",
+					data: {itemName: itemName}
+					}).then(function successCallback(response) {
+						// Potential bug if no fields are returned, forms will be cleared.
+						// Minor issue though.
+						fields = response.data;
+						$scope.forms = [];
+						$scope.count = 0
+						console.log(fields);
+						for (field in fields){
+							$scope.addForm(fields[field]);
+						};
+					}, function errorCallback(response) {
+					});
+			};
+
 			// This handles the forms html when adding and removing forms.
 			$scope.forms = [DynamicForm.createNew(0)];
 			$scope.count = 1
@@ -89,8 +130,8 @@
 				};
 				$scope.count = $scope.count - 1;
 			};
-			$scope.addForm = function(){
-				$scope.forms.push(DynamicForm.createNew($scope.count));
+			$scope.addForm = function(formData){
+				$scope.forms.push(DynamicForm.createNew($scope.count, formData));
 				$scope.count = $scope.count + 1;
 			};
 

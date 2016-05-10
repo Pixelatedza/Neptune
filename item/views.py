@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
 from django.http import JsonResponse
 import json
@@ -16,6 +16,21 @@ class ItemView(TemplateView):
 		context["itemTypes"] = HandleItemTypes.get_all_item_types()
 		context["items"] = HandleItems.get_all_items()
 		return context
+
+class ItemTypeFields(TemplateView):
+
+	def post(self, request):
+		data = json.loads(self.request.body)
+		fields_in = HandleItemTypes.get_item_type_attrs(data['itemName'])
+		fields_out = []
+		for field in fields_in:
+			fields_out.append({
+				'required': field.attribute.required,
+				'default': field.attribute.defaultValue,
+				'dataType': field.attribute.dataType,
+				'label': field.attribute.label
+			})
+		return JsonResponse(fields_out, status=200, safe=False)
 
 class CreateItemTypeView(TemplateView):
 	"""View to create Item Types"""
@@ -49,7 +64,7 @@ class CreateItemView(TemplateView):
 		form = ItemForm(initial={'itemType': itemName})
 		fields = HandleItemTypes.get_item_type_attrs(itemName)
 		for field in fields:
-			form.fields[str(field['fieldId'])] = CUSTOM_FIELD_MAP[field['dataType']](label=field['label'])
+			form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](label=field.attribute.label)
 		context = {"itemForm":form}
 		context["itemName"] = itemName
 		context['url'] = "/nepcore/item/create/"
