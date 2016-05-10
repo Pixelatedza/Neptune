@@ -43,6 +43,20 @@
 			};
 		});
 
+		app.directive("scroll", function ($window) {
+			return function(scope, element, attrs) {
+				angular.element($window).bind("scroll", function() {
+					if (this.pageYOffset >= 50) {
+						scope.navOffset = {'padding-top': "0px"}
+						scope.$digest()
+					} else {
+						scope.navOffset = {'padding-top': (50 - this.pageYOffset).toString() + "px"}
+						scope.$digest()
+					}
+				});
+			};
+		});
+
 		app.controller('postController', function($scope, $http) {
 			// create a blank object to handle form data.
 				$scope.formData = {};
@@ -152,7 +166,7 @@
 		</header>
 		<!-- </div> -->
 		{% block menu %}
-			<aside class="main-sidebar">
+			<aside class="main-sidebar" scroll ng-style="navOffset" style="position: fixed">
 				<!-- sidebar: style can be found in sidebar.less -->
 				<section class="sidebar">
 					{% autoescape off %}{{menu.render}}{% endautoescape on %}
