@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 from nepcore.menu import menu
 from nepcore.state import state_manager
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Permission
 from django.http import HttpResponseRedirect, HttpResponse
 import json
 from django.views.generic.edit import FormView
@@ -12,9 +13,9 @@ class BaseView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(BaseView, self).get_context_data(**kwargs)
+		menu.auto_discover(self.request)
 		context['menu'] = menu
 		context['state_manager'] = state_manager
-		print context['view'].request.user
 		return context
 
 class IndexView(TemplateView):
