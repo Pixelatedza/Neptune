@@ -3,7 +3,7 @@
 		{% if menu.icon %}
 		<i class="fa fa-{{menu.icon}}"></i>
 		{% endif %}
-		<span>{{menu.text}}</span>
+		<span>{{menu.text}}{{view.request.user}}</span>
 		{% if menu.children %}
 		<i class="fa fa-angle-left pull-right"></i>
 		{% endif %}

@@ -1,3 +1,4 @@
+import sys
 from django.conf import settings
 from django.template.loader import get_template
 from django.utils.safestring import mark_safe
@@ -14,10 +15,18 @@ class Menu(object):
 		self.parent = kwargs.get('menu', None)
 		self.icon = kwargs.get('icon', None)
 
-	def auto_discover(self):
+	def auto_discover(self, request=None):
+		# this is a mess, must make menus dynamic and work from json.
+		self.children = []
+		self.register(text="Dashboard",state=index_state)
+		self.request = request
 		for app in settings.INSTALLED_APPS:
 			try:
-				import_module('%s.%s' % (app, "menu"))
+				mod = '%s.%s' % (app, "menu")
+				if mod not in sys.modules:
+					import_module(mod)
+				elif mod != 'nepcore.menu':
+					reload(sys.modules[mod])
 			except ImportError:
 				pass
 			except Exception as e:
@@ -54,5 +63,3 @@ class MenuObj(Menu):
 
 menu = Menu()
 menu.register(text="Dashboard",state=index_state)
-
-menu.auto_discover()

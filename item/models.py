@@ -17,6 +17,12 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        permissions = (
+            ("export_csv","Can Export CSV"),
+            ("send_email","Can Send via Email")
+        )
+
 class Attribute(models.Model):
     #different properties
 
