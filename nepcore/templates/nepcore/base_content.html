@@ -12,7 +12,9 @@
 				{% for state in state_manager.states %}
 					.state('{{state.name}}', {
 						url: '{{state.url}}',
-						
+						controller: function($templateCache){
+							$templateCache.remove("{{state.link}}");
+						},
 						{% if state.params %}
 						templateUrl: function($stateParams){
 							return '{{state.link}}' + $stateParams.itemName
@@ -23,7 +25,6 @@
 
 					})
 				{% endfor %}
-			$urlRouterProvider.otherwise('index');
 		});
 
 		app.factory('DynamicForm', function(){
@@ -59,40 +60,70 @@
 
 		app.controller('copyItemType', function($scope, $http) {
 			// create a blank object to handle form data.
-				$scope.fields = {};
+			$scope.fields = {};
 			// calling our submit function.
-				$scope.getItemTypeFields = function(url) {
-					// Posting data to php file
-					$http({
-						method: 'POST',
-						url: "/nepcore/item/get/item-type-fields/",
-						data: $scope.formData
-						}).then(function successCallback(response) {
-							$scope.fields = response.data;
-							console.log($scope.fields)
-						}, function errorCallback(response) {
-						});
+			$scope.getItemTypeFields = function(url) {
+				// Posting data as json
+				$http({
+					method: 'POST',
+					url: "/nepcore/item/get/item-type-fields/",
+					data: $scope.formData
+					}).then(function successCallback(response) {
+						$scope.fields = response.data;
+					}, function errorCallback(response) {
+					});
 			};
 		});
 
+		app.controller('ListController', function($scope, $http) {
+			$scope.pageToGet = 1;
+			$scope.currentPage = 1;
+			$scope.hasPrev = false;
+			$scope.hasNext = false;
+
+			$scope.prevPage = function(){
+				$scope.getPage($scope.currentPage-1)
+			}
+
+			$scope.nextPage = function(){
+				$scope.getPage($scope.currentPage+1)
+			}
+
+			$scope.getPage = function(page_number=1){
+				// Posting data as json
+				$http({
+					method: 'POST',
+					url: "/nepcore/auth/",
+					data: {
+						page: $scope.pageToGet,
+						paginateBy: $scope.paginateBy
+					},
+					}).then(function successCallback(response) {
+						$scope.currentPage = response.data.pageToGet
+					}, function errorCallback(response) {
+						console.log($scope.paginateBy)
+						console.log("fail")
+					});
+				};
+		});
 
 		app.controller('postController', function($scope, $http) {
 			// create a blank object to handle form data.
-				$scope.formData = {};
-				$scope.formErrors = {};
+			$scope.formData = {};
+			$scope.formErrors = {};
 			// calling our submit function.
-				$scope.submitForm = function(url) {
-					// Posting data to php file
-					$http({
-						method: 'POST',
-						url: url,
-						data: $scope.formData
-						}).then(function successCallback(response) {
-							$scope.formData = {};
-							$scope.formErrors = {};
-						}, function errorCallback(response) {
-							$scope.formErrors = response.data;
-						});
+			$scope.submitForm = function(url) {
+				// Posting data as json
+				$http({
+					method: 'POST',
+					url: url,
+					data: $scope.formData
+					}).then(function successCallback(response) {
+						$scope.formData = {};
+						$scope.formErrors = {};
+					}, function errorCallback(response) {
+						$scope.formErrors = response.data;
+					});
 			};
 		});
 
@@ -100,7 +131,7 @@
 			// create a blank object to handle form data.
 			// calling our submit function.
 			$scope.getItemTypeFields = function(itemName) {
-				// Posting data to php file
+				// Posting data as json
 				$http({
 					method: 'POST',
 					url: "/nepcore/item/get/item-type-fields/",
@@ -137,31 +168,31 @@
 
 			// Submission of dynamic forms is a bit different to normal forms.
 			// create a blank object to handle form data.
-				$scope.formData = {};
-				$scope.formErrors = {};
+			$scope.formData = {};
+			$scope.formErrors = {};
 
 			// calling our submit function.
-				$scope.submitForm = function(url) {
-					// add the dynamic forms data to the global form data.
-					$scope.formData.attributes = []
-					for (index in $scope.forms){
-						form = $scope.forms[index];
-						form.formData.index = form.index;
-						$scope.formData.attributes.push(form.formData);
-					};
-					// Posting data to django as json
-					$http({
-						method: 'POST',
-						url: url,
-						data: $scope.formData
-						}).then(function successCallback(response) {
-							$scope.formData = {};
-							$scope.forms = [DynamicForm.createNew(0)];
-							$scope.count = 1;
-							$scope.formErrors = {};
-						}, function errorCallback(response) {
-							$scope.formErrors = response.data;
-						});
+			$scope.submitForm = function(url) {
+				// add the dynamic forms data to the global form data.
+				$scope.formData.attributes = []
+				for (index in $scope.forms){
+					form = $scope.forms[index];
+					form.formData.index = form.index;
+					$scope.formData.attributes.push(form.formData);
+				};
+				// Posting data to django as json
+				$http({
+					method: 'POST',
+					url: url,
+					data: $scope.formData
+					}).then(function successCallback(response) {
+						$scope.formData = {};
+						$scope.forms = [DynamicForm.createNew(0)];
+						$scope.count = 1;
+						$scope.formErrors = {};
+					}, function errorCallback(response) {
+						$scope.formErrors = response.data;
+					});
 			};
 		});
 	</script>

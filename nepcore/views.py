@@ -1,12 +1,15 @@
 from django.views.generic import TemplateView
-from nepcore.menu import menu
-from nepcore.state import state_manager
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission
 from django.http import HttpResponseRedirect, HttpResponse
-import json
 from django.views.generic.edit import FormView
+from django.views.generic.list import ListView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
+from django.core import serializers
+from nepcore.menu import menu
+from nepcore.state import state_manager
+import json
 
 class BaseView(TemplateView):
 	template_name = "nepcore/base_content.html"
@@ -20,6 +23,33 @@ class BaseView(TemplateView):
 
 class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
+
+class NEPPaginatedView(ListView):
+	paginate_by = 2
+
+	def get_context_data(self, **kwargs):
+		context = super(NEPPaginatedView, self).get_context_data(**kwargs)
+		context['paginateBy'] = self.paginate_by
+		return context		
+
+	def get(self, request, *args, **kwargs):
+		self.kwargs['page'] = 1
+		return super(NEPPaginatedView, self).get(request, *args, **kwargs)
+
+	def post(self, request, *args, **kwargs):
+		self.object_list = self.get_queryset()
+		allow_empty = self.get_allow_empty()
+		self.json = json.loads(self.request.body)
+		self.paginate_by = self.json.get('paginateBy', self.paginate_by)
+		self.kwargs['page'] = self.json.get('page', 1)
+		context = self.get_context_data()
+		serialized_obj = serializers.serialize(
+			'json',
+			context[self.get_context_object_name(self.object_list)],
+			fields=('username','email')
+		)
+		return JsonResponse(serialized_obj, status=200, safe=False)
+
 
 class LoginView(TemplateView):
 	template_name = 'nepcore/auth/login.html'
