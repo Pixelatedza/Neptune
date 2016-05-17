@@ -1,6 +1,11 @@
 {% extends "nepcore/base.html" %}
 
 {% block js %}
+	<style>
+		.table-hover>tbody>tr:hover{
+			background-color: #E2E2E2
+		}
+	</style>
 	<script>
 		app.run(['$state', function ($state) {
 			$state.transitionTo('index');
@@ -76,33 +81,45 @@
 		});
 
 		app.controller('ListController', function($scope, $http) {
-			$scope.pageToGet = 1;
-			$scope.currentPage = 1;
-			$scope.hasPrev = false;
-			$scope.hasNext = false;
+			$scope.pageObj = {} // The page object
+			$scope.paginator = {} // paginator
+			$scope.objectList = [] // data
+			$scope.pageObj.next = 0;
+			$scope.pageObj.prev = 0;
+			$scope.pageObj.number = 1;
+			$scope.pageObj.hasPrev = false;
+			$scope.pageObj.hasNext = false;
+			$scope.pageObj.end = 0;
+			$scope.pageObj.start = 0;
+			$scope.paginator.count = 0;
+			$scope.paginator.perPage = 0;
+			$scope.paginator.numPages = 0;
 
 			$scope.prevPage = function(){
-				$scope.getPage($scope.currentPage-1)
+				$scope.getPage($scope.pageObj.prev)
 			}
 
 			$scope.nextPage = function(){
-				$scope.getPage($scope.currentPage+1)
+				$scope.getPage($scope.pageObj.next)
 			}
 
-			$scope.getPage = function(page_number=1){
+			$scope.getPage = function(page_number){
 				// Posting data as json
+				console.log(page_number)
 				$http({
 					method: 'POST',
-					url: "/nepcore/auth/",
+					url: "/nepcore/auth/users/",
 					data: {
-						page: $scope.pageToGet,
-						paginateBy: $scope.paginateBy
+						page: page_number,
+						paginateBy: $scope.paginator.perPage
 					},
 					}).then(function successCallback(response) {
-						$scope.currentPage = response.data.pageToGet
+						console.log($scope)
+						$scope.paginator = response.data.paginator;
+						$scope.pageObj = response.data.page_obj;
+						$scope.objectList = response.data.object_list;
+						console.log($scope)
 					}, function errorCallback(response) {
-						console.log($scope.paginateBy)
-						console.log("fail")
 					});
 				};
 		});

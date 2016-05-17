@@ -30,7 +30,29 @@ class NEPPaginatedView(ListView):
 	def get_context_data(self, **kwargs):
 		context = super(NEPPaginatedView, self).get_context_data(**kwargs)
 		context['paginateBy'] = self.paginate_by
-		return context		
+		return context
+
+	def _serialize_paginator(self, paginator):
+		return {
+			'count': paginator.count,
+			'perPage': paginator.per_page,
+			'numPages': paginator.num_pages
+		}
+
+	def _serialize_page_obj(self, page_obj):
+		json_obj = {
+			'number': page_obj.number,
+			'hasPrev': page_obj.has_previous(),
+			'hasNext': page_obj.has_next(),
+			'start': page_obj.start_index(),
+			'end': page_obj.end_index()
+		}
+		if json_obj['hasPrev']:
+			json_obj['prev'] = page_obj.previous_page_number()
+
+		if json_obj['hasNext']:
+			json_obj['next'] = page_obj.next_page_number()
+		return json_obj
 
 	def get(self, request, *args, **kwargs):
 		self.kwargs['page'] = 1
@@ -40,15 +62,26 @@ class NEPPaginatedView(ListView):
 		self.object_list = self.get_queryset()
 		allow_empty = self.get_allow_empty()
 		self.json = json.loads(self.request.body)
-		self.paginate_by = self.json.get('paginateBy', self.paginate_by)
+		
+		if self.json.get('paginateBy'):
+			self.paginate_by = self.json.get('paginateBy')
+
 		self.kwargs['page'] = self.json.get('page', 1)
 		context = self.get_context_data()
-		serialized_obj = serializers.serialize(
+		context['paginator'] = self._serialize_paginator(context['paginator'])
+		context['page_obj'] = self._serialize_page_obj(context['page_obj'])
+		context['object_list'] = eval(serializers.serialize(
+			'json',
+			context['object_list'],
+			fields=('username','email')
+		))
+		context[self.get_context_object_name(self.object_list)] = eval(serializers.serialize(
 			'json',
 			context[self.get_context_object_name(self.object_list)],
 			fields=('username','email')
-		)
-		return JsonResponse(serialized_obj, status=200, safe=False)
+		))
+		del context['view']
+		return JsonResponse(context, status=200, safe=False)
 
 
 class LoginView(TemplateView):
