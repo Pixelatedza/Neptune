@@ -24,6 +24,24 @@ class BaseView(TemplateView):
 class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
 
+class GetStates(TemplateView):
+
+	def _states_to_json(self, states):
+		jsonStates = []
+		for state in states:
+			jsonStates.append({
+				"name": state.name,
+				"url": state.url,
+				"link": state.link,
+				"params": state.params
+			})
+		return jsonStates
+
+	def get(self, request, *args, **kwargs):
+		states = state_manager.states_to_json()
+		print states
+		return JsonResponse(states, status=200, safe=False)
+
 class NEPPaginatedView(ListView):
 	paginate_by = 2
 

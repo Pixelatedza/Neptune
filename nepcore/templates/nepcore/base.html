@@ -39,51 +39,9 @@
 	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
-	<script>
-		var app =	angular.module('NeptuneApp', ['ui.router']).config(function($interpolateProvider,$httpProvider) {
-			$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
-			$httpProvider.defaults.xsrfCookieName = 'csrftoken';
-			$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-		});
-	</script>
-
-	<style>
-		.fixed_nav{
-			padding-top: 0px;
-			position: fixed;
-		}
-		.nep-error{
-			margin: 0px;
-		}
-		.nep-error>span{
-			margin: 0px;
-			padding: 3px;
-			font-size: 12px;
-		}
-		input[type="checkbox"] {
-			display:inline-block;
-			width:20px;
-			height:20px;
-			margin-top: 7px;
-			vertical-align:middle;
-			background:url(/static/plugins/iCheck/minimal/blue.png) left top no-repeat;
-			cursor:pointer;
-		}
-		input[type="checkbox"]:hover {
-			cursor:hand;
-			background:url(/static/plugins/iCheck/minimal/blue.png) -20px top no-repeat;
-		}
-		input[type="checkbox"]:checked {
-			background:url(/static/plugins/iCheck/minimal/blue.png) -40px top no-repeat;
-		}
-
-		input[type="checkbox"]:disabled {
-			background:url(/static/plugins/iCheck/minimal/blue.png) -60px top no-repeat;
-		}
-		input[type="checkbox"]:disabled :checked{
-			background:url(/static/plugins/iCheck/minimal/blue.png) -80px top no-repeat;
-		}
-	</style>
+	<script src="/static/nepcore/angular/app.js"></script>
+	{% block css %}
+	{% endblock %}
 	{% block js %}
 	{% endblock %}
 </head>

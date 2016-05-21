@@ -23,7 +23,7 @@
 							</tr>
 						</thead>
 						<tbody>							
-							<tr ng-repeat="object in objectList">
+							<tr ng-repeat="object in objectList" ng-click="select(object.pk)" ng-class="{'selected':selectedItems[object.pk]}">
 								<td style="width: 10px">{[{object.pk}]}</td>
 								<td>{[{object.fields.username}]}</td>
 								<td>{[{object.fields.email}]}</td>

@@ -18,6 +18,17 @@ class StateManager(object):
 		self.states.append(state)
 		return state
 
+	def states_to_json(self):
+		jsonStates = []
+		for state in self.states:
+			jsonStates.append({
+				"name": state.name,
+				"url": state.url,
+				"link": state.link,
+				"params": state.params
+			})
+		return jsonStates
+
 	def __str__(self):
 		return self
 
