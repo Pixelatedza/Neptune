@@ -10,3 +10,4 @@ class AuthView(TemplateView):
 
 class PagedUserView(NEPPaginatedView):
 	model = User
+	fields = ('username','email')

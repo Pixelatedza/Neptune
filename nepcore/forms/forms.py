@@ -11,8 +11,11 @@ class NEPBoundField(BoundField):
 
 	def as_widget(self, widget=None, attrs=None, only_initial=False):
 		attrs = {'class':'form-control', 'ng-model':'formData[\'' + self.name + '\']'}
-		if self.value():
-			attrs.update({'ng-init':'formData[\'' + self.name + '\']=\'%s\'' % self.value()})
+		val = self.value()
+		if val:
+			if type(val) != int:
+				val = '\'%s\'' % val
+			attrs.update({'ng-init':'formData[\'' + self.name + '\']=%s' % val})
 		error_html = """<div ng-class="{'bg-red color-palette nep-error':formErrors['""" + self.name + """']}">
 			<span>{[{formErrors['""" + self.name + """']}]}</span>
 		</div>"""

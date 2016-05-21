@@ -10,7 +10,9 @@ app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 			url: "/nepcore/states/",
 			}).then(function successCallback(response) {
 				loadStates(response.data);
-				$state.transitionTo('index');
+				console.log($state)
+				$state.go('index', {state: $state});
+				console.log($state.get())
 			}, function errorCallback(response) {
 			});
 
@@ -18,16 +20,36 @@ app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 
 app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
 	loadStates = function(states){
+		stateNameLinks = {}
 		for (state in states){
 			s = states[state];
-			$stateProvider.state(s.name, {
+			if (s.params){
+				$stateProvider.state(s.name, {
 					url: s.url,
-					controller: function($templateCache){
-						$templateCache.remove(s.link);
+					data: {
+						my_link: s.link
+					},
+					controller: function($templateCache, $state, $stateParams){
+						$templateCache.remove($stateParams.url);
+					},
+					templateUrl: function($stateParams){
+						return $stateParams.url;
+					}
+				});		
+
+			}else{
+				$stateProvider.state(s.name, {
+					url: s.url,
+					data: {
+						my_link: s.link
+					},
+					controller: function($templateCache, $state){
+						$templateCache.remove($state.current.data.my_link);
 					},
 					templateUrl: s.link
-			})
+				});				
+			};
 		};
-	}
+	};
 	$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 });

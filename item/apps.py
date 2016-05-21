@@ -155,12 +155,13 @@ class HandleItems(Items):
     def get_item_values(self, itemID):
     #returns a dict of field values for an item
         item = Item.objects.get(id=itemID)
-        fields = []
+        fields = {}
         objs = ItemAttributeValue.objects.all().filter(item=item)
 
         for obj in objs:
-            fields.append({'label': obj.attribute.label,
-                           'value': obj.value})
+            # fields.append({'label': obj.attribute.label,
+            #                'value': obj.value})
+            fields.update({obj.attribute.label: obj.value})
 
         return {'item': item.name, 'fields': fields}
 

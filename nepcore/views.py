@@ -43,7 +43,8 @@ class GetStates(TemplateView):
 		return JsonResponse(states, status=200, safe=False)
 
 class NEPPaginatedView(ListView):
-	paginate_by = 2
+	paginate_by = 25
+	fields = None
 
 	def get_context_data(self, **kwargs):
 		context = super(NEPPaginatedView, self).get_context_data(**kwargs)
@@ -91,12 +92,14 @@ class NEPPaginatedView(ListView):
 		context['object_list'] = eval(serializers.serialize(
 			'json',
 			context['object_list'],
-			fields=('username','email')
+			fields=self.fields,
+			use_natural_foreign_keys=True
 		))
 		context[self.get_context_object_name(self.object_list)] = eval(serializers.serialize(
 			'json',
 			context[self.get_context_object_name(self.object_list)],
-			fields=('username','email')
+			fields=self.fields,
+			use_natural_foreign_keys=True
 		))
 		del context['view']
 		return JsonResponse(context, status=200, safe=False)

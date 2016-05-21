@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
 from django.http import JsonResponse
-import json
+from django import forms as djForms
 from item.forms import ItemTypeForm, ItemForm
 from item.apps import HandleItemTypes, HandleItems
-from django import forms as djForms
+from item.models import Item
 from nepcore.forms.fields import CUSTOM_FIELD_MAP
+from nepcore.views import NEPPaginatedView
+import json
 
 class ItemView(TemplateView):
 	template_name = "item/items.html"
@@ -14,8 +16,11 @@ class ItemView(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(ItemView, self).get_context_data(**kwargs)
 		context["itemTypes"] = HandleItemTypes.get_all_item_types()
-		context["items"] = HandleItems.get_all_items()
 		return context
+
+class PagedItemView(NEPPaginatedView):
+	model = Item
+	fields = ('name','itemType')
 
 class ItemTypeFields(TemplateView):
 
@@ -55,23 +60,38 @@ class CreateItemTypeView(TemplateView):
 		errors = handleItemTypes.errors
 		return JsonResponse(errors, status=400)
 
-class CreateItemView(TemplateView):
+class CreateEditItemView(TemplateView):
 	"""View to create Items"""
 
 	template_name = "item/create_item.html"
 
-	def get(self, request, itemName=None):
-		form = ItemForm(initial={'itemType': itemName})
-		fields = HandleItemTypes.get_item_type_attrs(itemName)
+	def get(self, request, itemTypeName=None, item=None):
+		itemName = None
+		itemValues = None
+		if item:
+			itemValues = HandleItems.get_item_values(item)
+			itemName = itemValues['item']
+		form = ItemForm(initial={'itemType': itemTypeName, 'itemName': itemName, 'itemPk': item})
+		fields = HandleItemTypes.get_item_type_attrs(itemTypeName)
 		for field in fields:
-			form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](label=field.attribute.label)
+			if itemValues:
+				form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](
+					label=field.attribute.label,
+					initial=itemValues['fields'][field.attribute.label]
+				)
+			else:
+				form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](
+					label=field.attribute.label
+				)
+
 		context = {"itemForm":form}
-		context["itemName"] = itemName
+		context["itemTypeName"] = itemTypeName
 		context['url'] = "/nepcore/item/create/"
 		return self.render_to_response(context)
 
 	def post(self, request):
 		data = json.loads(self.request.body)
+		print data
 		handleItem = HandleItems(data)
 		if handleItem.is_valid():
 			return JsonResponse({'msg':'Succesfully created Item'}, status=200)

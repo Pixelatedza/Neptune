@@ -14,3 +14,37 @@ app.factory('DynamicForm', function(){
 		}
 	};
 });
+
+app.factory('AjaxService', function($http){
+	function nepGet(url) {
+		// Posting data as json
+		$http({
+			method: 'GET',
+			url: url,
+			}).then(function successCallback(response) {
+				console.log(response.data);
+			}, function errorCallback(response) {
+			});
+	};
+
+	function nepPost(url, data) {
+		// Posting data as json
+		$http({
+			method: 'POST',
+			url: url,
+			data: data
+			}).then(function successCallback(response) {
+				console.log(response.data);
+			}, function errorCallback(response) {
+			});
+	};
+
+	return {
+		get: function(url){
+			nepGet(url);
+		},
+		post: function(url, data){
+			nepPost(url, data);
+		}
+	};
+});

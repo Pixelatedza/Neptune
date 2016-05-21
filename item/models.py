@@ -1,11 +1,13 @@
 from django.db import models
 from django.conf import settings
 
-
 class ItemType(models.Model):
     #different item types
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=50)
+
+    def natural_key(self):
+        return {"name":self.name, "description":self.description}
 
     def __str__(self):
         return self.name
@@ -14,6 +16,7 @@ class Item(models.Model):
     #different item
     name = models.CharField(max_length=50)
     itemType = models.ForeignKey(ItemType)
+
     def __str__(self):
         return self.name
 

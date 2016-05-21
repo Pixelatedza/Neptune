@@ -1,4 +1,4 @@
-<section class="content" ng-controller='ListController' ng-init="getPage(1)">
+<section class="content" ng-controller='UserListController' ng-init="getPage(1)">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
@@ -14,19 +14,26 @@
 					</div>
 				</div>
 				<div class="box-body table-responsive no-padding">
-					<table class="table table-striped table-hover">
+					<div class="cssload-container" ng-show="loading">
+						<div class="cssload-speeding-wheel" style="width:40px;height:40px"></div>
+					</div>
+					<table class="table table-striped table-hover" ng-class="{'ajax-loading': loading}">
 						<thead>
 							<tr>
 								<th style="width: 10px">#</th>
-								<th>Username</th>
+								<th style="width: 30%">Username</th>
 								<th>Email Address</th>
+								<th style="width: 35px"></th>
+								<th style="width: 35px"></th>
 							</tr>
 						</thead>
-						<tbody>							
-							<tr ng-repeat="object in objectList" ng-click="select(object.pk)" ng-class="{'selected':selectedItems[object.pk]}">
+						<tbody>
+							<tr ng-repeat="object in objectList" class="clickable" ng-click="select($event, object.pk)" ng-class="{'selected':selectedItems[object.pk]}">
 								<td style="width: 10px">{[{object.pk}]}</td>
-								<td>{[{object.fields.username}]}</td>
+								<td style="width: 30%">{[{object.fields.username}]}</td>
 								<td>{[{object.fields.email}]}</td>
+								<td style="width: 35px"><i class="fa fa-edit fa-lg" ng-click="edit(object.pk)"></i></td>
+								<td style="width: 35px"><i class="fa fa-trash-o fa-lg" ng-click="delete(object.pk)"></i></td>
 							</tr>
 						</tbody>
 					</table>
