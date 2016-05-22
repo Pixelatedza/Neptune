@@ -15,7 +15,7 @@ app.factory('DynamicForm', function(){
 	};
 });
 
-app.factory('AjaxService', function($http){
+app.factory('AjaxService', function($http, FileSaver, Blob){
 	function nepGet(url) {
 		// Posting data as json
 		$http({
@@ -32,12 +32,25 @@ app.factory('AjaxService', function($http){
 		$http({
 			method: 'POST',
 			url: url,
-			data: data
+			data: data,
 			}).then(function successCallback(response) {
 				console.log(response.data);
 			}, function errorCallback(response) {
 			});
 	};
+
+	function nepPostDownload(url, data){
+		// Posting data as json
+		$http({
+			method: 'POST',
+			url: url,
+			data: data,
+			}).then(function successCallback(response) {
+				data = new Blob([response.data], {type: 'text/csv'});
+				FileSaver.saveAs(data, 'exported_items.csv')
+			}, function errorCallback(response) {
+			});
+	}
 
 	return {
 		get: function(url){
@@ -45,6 +58,9 @@ app.factory('AjaxService', function($http){
 		},
 		post: function(url, data){
 			nepPost(url, data);
+		},
+		postDownload: function(url, data){
+			nepPostDownload(url, data);
 		}
 	};
 });

@@ -86,7 +86,7 @@ app.controller('UserListController', function($scope, $controller) {
 
 app.controller('ItemListController', function($scope, $controller, $state) {
 	$controller('ListController', {$scope: $scope});
-	$scope.url = "/nepcore/item/get/items/";
+	$scope.url = "/nepcore/item/list/items/";
 	$scope.create_state = "create_edit_item_state";
 	$scope.edit_state = "create_edit_item_state";
 	$scope.delete_state = "create_item_state";
@@ -98,11 +98,15 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.edit = function(itemPk){
 		state = $state.get($scope.edit_state);
-		itemTypeName = $scope.objectList[$scope.itemPKMap[itemPk]].fields.itemType.name
+		itemTypeName = $scope.objectList[$scope.itemPKMap[itemPk]].fields.itemType.name;
 		$state.go($scope.create_state, {url: state.data.my_link + itemTypeName + "/" + itemPk});
 	};
 
 	$scope.delete = function(){
 		console.log("NOT IMPLEMETED!")
 	};
+
+	$scope.export = function(){
+		$scope.ajax.postDownload('/nepcore/item/export/items/', $scope.selectedItems);
+	}
 });

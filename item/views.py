@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django import forms as djForms
 from item.forms import ItemTypeForm, ItemForm
 from item.apps import HandleItemTypes, HandleItems
@@ -91,9 +91,14 @@ class CreateEditItemView(TemplateView):
 
 	def post(self, request):
 		data = json.loads(self.request.body)
-		print data
 		handleItem = HandleItems(data)
 		if handleItem.is_valid():
 			return JsonResponse({'msg':'Succesfully created Item'}, status=200)
 		errors = handleItem.errors
 		return JsonResponse(errors, status=400)
+
+class ExportItemView(TemplateView):
+
+	def post(self, request):
+		data = json.loads(self.request.body)
+		return JsonResponse(data, status=200)

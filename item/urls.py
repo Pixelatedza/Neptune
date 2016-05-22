@@ -7,6 +7,7 @@ urlpatterns = patterns('',
 	url(r'^create/$', views.CreateEditItemView.as_view(), name='item_create_post'),
 	url(r'^create/(?P<itemTypeName>[\w\- ]+)$', views.CreateEditItemView.as_view(), name='item_create'),
 	url(r'^create/(?P<itemTypeName>[\w\- ]+)/(?P<item>[\w\- ]+)$', views.CreateEditItemView.as_view(), name='item_edit'),
-	url(r'^get/items/$', views.PagedItemView.as_view(), name='item_list'),
+	url(r'^list/items/$', views.PagedItemView.as_view(), name='item_list'),
+	url(r'^export/items/$', views.ExportItemView.as_view(), name='item_export'),
 	url(r'^$', views.ItemView.as_view(), name='item_select'),
 )

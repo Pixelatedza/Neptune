@@ -1,4 +1,4 @@
-var app = angular.module('NeptuneApp', ['ui.router']).config(function($interpolateProvider,$httpProvider) {
+var app = angular.module('NeptuneApp', ['ui.router','ngFileSaver']).config(function($interpolateProvider,$httpProvider) {
 	$interpolateProvider.startSymbol('{[{').endSymbol('}]}');
 	$httpProvider.defaults.xsrfCookieName = 'csrftoken';
 	$httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
