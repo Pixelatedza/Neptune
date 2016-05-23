@@ -163,7 +163,7 @@ class HandleItems(Items):
             #                'value': obj.value})
             fields.update({obj.attribute.label: obj.value})
 
-        return {'item': item.name, 'fields': fields}
+        return {'item': item.name, 'fields': fields, 'itemType': item.itemType.name}
 
     @classmethod
     def get_all_items(self):

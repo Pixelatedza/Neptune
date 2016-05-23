@@ -66,6 +66,12 @@ td>i:hover{
 	width: 100%;
 	text-align: center;
 	padding: 10px;
+}
+
+.cssload-container-absolute {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
 	position: absolute;
 }
 

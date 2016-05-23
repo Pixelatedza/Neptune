@@ -1,0 +1,2 @@
+{% for item in items %}{{item.itemType}},{{item.item}}{% for field, value in item.fields.items %},{{value}}{% endfor %}
+{% endfor %}

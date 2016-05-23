@@ -18,6 +18,13 @@ import local
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Email settings
+TIME_ZONE = 'Africa/Johannesburg'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'nepcoreserver@gmail.com'
+EMAIL_HOST_PASSWORD = 'wrjdqguktscpchoe'
+EMAIL_USE_TLS = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/

@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import View, TemplateView
 from django.views.generic.edit import FormView
+from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponse
+from django.template.loader import get_template
+from django import template
 from django import forms as djForms
 from item.forms import ItemTypeForm, ItemForm
 from item.apps import HandleItemTypes, HandleItems
@@ -100,5 +103,54 @@ class CreateEditItemView(TemplateView):
 class ExportItemView(TemplateView):
 
 	def post(self, request):
+		items = []
 		data = json.loads(self.request.body)
-		return JsonResponse(data, status=200)
+
+		# Get all item information
+		for itemPK in data:
+			item = HandleItems.get_item_values(itemPK)
+			items.append(item)
+
+		# Generate CSV file
+		tmpl = get_template('item/item_csv.csv')
+		context = template.Context({'items': items})
+		csv = tmpl.render(context)
+		print type(csv)
+
+		return HttpResponse(csv, status=200)
+
+class EmailItemView(TemplateView):
+
+	def post(self, request):
+		items = []
+		data = json.loads(self.request.body)
+
+		# Get all item information
+		for itemPK in data['items']:
+			item = HandleItems.get_item_values(itemPK)
+			items.append(item)
+
+		# Generate CSV file
+		tmpl = get_template('item/item_csv.csv')
+		context = template.Context({'items': items})
+		csv = tmpl.render(context)
+
+		# Email user with CSV file
+		email = EmailMessage(
+			'Item Information',
+			'Hi There,\n\nFind attached csv containing item information',
+			'nepcoreserver@gmail.com',
+			[data['toEmail']])
+		email.attach('test.csv',csv,'text/csv')
+		try:
+			email.send()
+			return JsonResponse({'msg': 'Successfully sent email'}, status=200)
+		except:
+			return JsonResponse({'msg': 'Something went wrong.\n\nMake sure you have entered a valid email address'}, status=400)
+
+class GetItemView(TemplateView):
+	template_name = "item/items.html"
+
+	def get(self, request, itemPK):
+		item = HandleItems.get_item_values(itemPK)
+		return JsonResponse(item, status=200)

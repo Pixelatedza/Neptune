@@ -16,30 +16,40 @@ app.factory('DynamicForm', function(){
 });
 
 app.factory('AjaxService', function($http, FileSaver, Blob){
-	function nepGet(url) {
+	function nepGet(url, callBack) {
 		// Posting data as json
 		$http({
 			method: 'GET',
 			url: url,
 			}).then(function successCallback(response) {
-				console.log(response.data);
+				if (callBack){
+					callBack(true, response.data);
+				}
 			}, function errorCallback(response) {
+				if (callBack){
+					callBack(false, response.data);
+				}
 			});
 	};
 
-	function nepPost(url, data) {
+	function nepPost(url, data, callBack) {
 		// Posting data as json
 		$http({
 			method: 'POST',
 			url: url,
 			data: data,
 			}).then(function successCallback(response) {
-				console.log(response.data);
+				if (callBack){
+					callBack(true, response.data);
+				}
 			}, function errorCallback(response) {
+				if (callBack){
+					callBack(false, response.data);
+				}
 			});
 	};
 
-	function nepPostDownload(url, data){
+	function nepPostDownload(url, data, callBack){
 		// Posting data as json
 		$http({
 			method: 'POST',
@@ -48,19 +58,25 @@ app.factory('AjaxService', function($http, FileSaver, Blob){
 			}).then(function successCallback(response) {
 				data = new Blob([response.data], {type: 'text/csv'});
 				FileSaver.saveAs(data, 'exported_items.csv')
+				if (callBack){
+					callBack(true, response.data);
+				}
 			}, function errorCallback(response) {
+				if (callBack){
+					callBack(false, response.data);
+				}
 			});
 	}
 
 	return {
-		get: function(url){
-			nepGet(url);
+		get: function(url, callBack){
+			nepGet(url, callBack);
 		},
-		post: function(url, data){
-			nepPost(url, data);
+		post: function(url, data, callBack){
+			nepPost(url, data, callBack);
 		},
-		postDownload: function(url, data){
-			nepPostDownload(url, data);
+		postDownload: function(url, data, callBack){
+			nepPostDownload(url, data, callBack);
 		}
 	};
 });

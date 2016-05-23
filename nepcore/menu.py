@@ -1,9 +1,9 @@
 import sys
 from django.conf import settings
 from django.template.loader import get_template
+from django import template
 from django.utils.safestring import mark_safe
 from importlib import import_module
-from django import template
 from nepcore.state import index_state
 
 class Menu(object):
