@@ -19,9 +19,9 @@
 								<span class="sr-only">Toggle Dropdown</span>
 							</button>
 							<ul class="dropdown-menu" role="menu">
-								{% for itemId, itemName in itemTypes.items %}
+								{% for itemPK, itemName in itemTypes.items %}
 									<li>
-										<a ng-click="create('{{itemName}}')">{{itemName}}</a>
+										<a ng-click="create('{{itemPK}}')">{{itemName}}</a>
 									</li>
 								{% endfor %}
 							</ul>

@@ -26,7 +26,7 @@ class GetGroupsView(TemplateView):
 class PagedUserView(NEPPaginatedView):
 	model = User
 	fields = ('username','email', 'groups')
-	queryset = User.objects.exclude(pk=1)
+	queryset = User.objects.exclude(is_staff=True).exclude(is_active=False)
 
 class ChangeUserGroupView(TemplateView):
 	
@@ -39,3 +39,16 @@ class ChangeUserGroupView(TemplateView):
 			return JsonResponse({'msg': 'Group change successful'}, status=200)
 		except:
 			return JsonResponse({'msg': 'Something went wrong'}, status=400)
+
+class DeleteUserView(TemplateView):
+	"""View to delete Items"""
+
+	def post(self, request):
+		data = json.loads(self.request.body)
+		try:
+			user = User.objects.get(pk=data['userPK'])
+			user.is_active = False
+			user.save()
+			return JsonResponse({'msg':'Succesfully created Item Type'}, status=200)
+		except:
+			return JsonResponse({'msg':'Something went wrong'}, status=400)

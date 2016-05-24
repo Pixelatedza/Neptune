@@ -53,6 +53,7 @@ class HandleItems(Items):
 
         return errors
 
+    @classmethod
     def delete_item(self, itemPK):
         item = Item.objects.get(pk=itemPK)
         item.archived = True

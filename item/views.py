@@ -69,14 +69,14 @@ class CreateEditItemView(TemplateView):
 
 	template_name = "item/create_item.html"
 
-	def get(self, request, itemTypeName=None, item=None):
+	def get(self, request, itemTypePK=None, item=None):
 		itemName = None
 		itemValues = None
 		if item:
 			itemValues = HandleItems.get_item_values(item)
 			itemName = itemValues['item']
-		form = ItemForm(initial={'itemType': itemTypeName, 'itemName': itemName, 'itemPk': item})
-		fields = HandleItemTypes.get_item_type_attrs(itemTypeName)
+		form = ItemForm(initial={'itemType': itemTypePK, 'itemName': itemName, 'itemPk': item})
+		fields = HandleItemTypes.get_item_type_attrs(itemTypePK)
 		for field in fields:
 			if itemValues:
 				form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](
@@ -89,7 +89,7 @@ class CreateEditItemView(TemplateView):
 				)
 
 		context = {"itemForm":form}
-		context["itemTypeName"] = itemTypeName
+		context["itemTypePK"] = itemTypePK
 		context['url'] = "/nepcore/item/create/"
 		return self.render_to_response(context)
 
@@ -100,6 +100,18 @@ class CreateEditItemView(TemplateView):
 			return JsonResponse({'msg':'Succesfully created Item'}, status=200)
 		errors = handleItem.errors
 		return JsonResponse(errors, status=400)
+
+class DeleteItemView(TemplateView):
+	"""View to delete Items"""
+
+	def post(self, request):
+		data = json.loads(self.request.body)
+		try:
+			HandleItems.delete_item(data['itemPK'])
+			return JsonResponse({'msg':'Succesfully created Item Type'}, status=200)
+		except Exception as e:
+			print e
+			return JsonResponse({'msg':'Something went wrong'}, status=400)
 
 class ExportItemView(TemplateView):
 
@@ -116,8 +128,6 @@ class ExportItemView(TemplateView):
 		tmpl = get_template('item/item_csv.csv')
 		context = template.Context({'items': items})
 		csv = tmpl.render(context)
-		print type(csv)
-
 		return HttpResponse(csv, status=200)
 
 class EmailItemView(TemplateView):

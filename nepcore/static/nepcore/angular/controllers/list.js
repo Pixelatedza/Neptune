@@ -19,13 +19,20 @@ app.controller('ListController', function($scope, $http, AjaxService) {
 	$scope.selectedItemsCount = 0;
 	$scope.ajax = AjaxService;
 
+	$scope.buildIndexMap = function(){
+		$scope.indexPKMap = {}
+		for (obj in $scope.objectList){
+			$scope.indexPKMap[$scope.objectList[obj].pk] = obj;
+		};
+	};
+
 	$scope.prevPage = function(){
 		$scope.getPage($scope.pageObj.prev);
-	}
+	};
 
 	$scope.nextPage = function(){
 		$scope.getPage($scope.pageObj.next);
-	}
+	};
 
 	$scope.getPage = function(page_number){
 		// Posting data as json
@@ -41,10 +48,7 @@ app.controller('ListController', function($scope, $http, AjaxService) {
 				$scope.paginator = response.data.paginator;
 				$scope.pageObj = response.data.page_obj;
 				$scope.objectList = response.data.object_list;
-				$scope.indexPKMap = {}
-				for (obj in $scope.objectList){
-					$scope.indexPKMap[$scope.objectList[obj].pk] = obj;
-				};
+				$scope.buildIndexMap();
 			}, function errorCallback(response) {
 			}).finally(function(){
 				$scope.loading = false;
@@ -123,8 +127,14 @@ app.controller('UserListController', function($scope, $controller) {
 		});
 	};
 
-	$scope.delete = function(){
-		console.log("NOT IMPLEMENTED!")
+	$scope.delete = function(userPK){
+		$scope.ajax.post('/nepcore/auth/users/delete/', {'userPK': userPK}, function(success, data){
+			if (success){
+				i = $scope.indexPKMap[userPK]
+				$scope.objectList.splice(i, 1);
+				$scope.buildIndexMap();
+			}
+		});
 	};
 
 	$scope.close_modal = function(){
@@ -161,8 +171,14 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 		$state.go($scope.create_state, {url: state.data.my_link + itemTypeName + "/" + itemPK});
 	};
 
-	$scope.delete = function(){
-		console.log("NOT IMPLEMETED!")
+	$scope.delete = function(itemPK){
+		$scope.ajax.post('/nepcore/item/delete/', {'itemPK': itemPK}, function(success, data){
+			if (success){
+				i = $scope.indexPKMap[itemPK]
+				$scope.objectList.splice(i, 1);
+				$scope.buildIndexMap();
+			}
+		});
 	};
 
 	$scope.export = function(){
