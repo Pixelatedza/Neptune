@@ -154,9 +154,9 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 	$scope.emailing = false;
 	$scope.item = {};
 
-	$scope.create = function(itemTypeName){
+	$scope.create = function(itemTypePK){
 		state = $state.get($scope.create_state);
-		$state.go($scope.create_state, {url: state.data.my_link + itemTypeName});
+		$state.go($scope.create_state, {url: state.data.my_link + itemTypePK});
 	};
 
 	$scope.view = function(itemPK){
@@ -167,8 +167,8 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.edit = function(itemPK){
 		state = $state.get($scope.edit_state);
-		itemTypeName = $scope.objectList[$scope.indexPKMap[itemPK]].fields.itemType.name;
-		$state.go($scope.create_state, {url: state.data.my_link + itemTypeName + "/" + itemPK});
+		itemTypePK = $scope.objectList[$scope.indexPKMap[itemPK]].pk;
+		$state.go($scope.create_state, {url: state.data.my_link + itemTypePK + "/" + itemPK});
 	};
 
 	$scope.delete = function(itemPK){

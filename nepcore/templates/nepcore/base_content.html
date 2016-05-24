@@ -14,7 +14,7 @@
 
 {% block body %}
 	<body class="skin-black sidebar-mini" ng-app="NeptuneApp">
-	<!-- <div class="wrapper"> -->
+	<div class="wrapper">
 
 		<header class="main-header">
 			<!-- Logo -->
@@ -26,24 +26,25 @@
 			</a>
 			<nav class="navbar navbar-static-top" role="navigation">
 			  <!-- Sidebar toggle button-->
-			  <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+			  <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
 				<span class="sr-only">Toggle navigation</span>
 			  </a>
 			  <div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 
-					<li class="dropdown user user-menu">
-						<a ui-sref='index' href="#"> 
-						  <span class="hidden-xs">Welcome {{view.request.user}}
+					<li>
+						<a ui-sref='index' href="#" class="hidden-xs"> 
+						  <span>Welcome {{view.request.user}}</span>
 						</a>
 					</li>
-					<li class="dropdown user user-menu">
+					<li>
 						<a ng-href="/nepcore/logout/">
-						  <span class="hidden-xs">Logout
+						  <i class="fa fa-sign-out hidden-lg-md"></i>
+						  <span class="hidden-xs"> Logout</span>
 						</a>
 					</li>
-					<li class="dropdown user user-menu">
-						<a ui-sref='index' href="#">  <span class="hidden-xs">Powered by Neptune</span></a>
+					<li>
+						<a ui-sref='index' href="#"> <span>Powered by Neptune</span></a>
 					</li>
 
 				  </ul>
@@ -65,6 +66,7 @@
 			{% endblock %}
 		</div>
 		<!-- </div> -->
+	</div>
 	</body>
 
 	{% block extra_js %}
