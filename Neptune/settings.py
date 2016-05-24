@@ -35,6 +35,9 @@ SECRET_KEY = 'h#5s&uz9qg^&zb3=47#+)0@wy0ldo4!a=4uh+x2pfyyi-#i^aa'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Session time outs
+SESSION_COOKIE_AGE = 300
+
 ALLOWED_HOSTS = []
 
 APPEND_SLASH = False

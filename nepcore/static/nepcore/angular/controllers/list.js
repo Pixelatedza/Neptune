@@ -41,9 +41,9 @@ app.controller('ListController', function($scope, $http, AjaxService) {
 				$scope.paginator = response.data.paginator;
 				$scope.pageObj = response.data.page_obj;
 				$scope.objectList = response.data.object_list;
-				$scope.itemPKMap = {}
+				$scope.indexPKMap = {}
 				for (obj in $scope.objectList){
-					$scope.itemPKMap[$scope.objectList[obj].pk] = obj;
+					$scope.indexPKMap[$scope.objectList[obj].pk] = obj;
 				};
 			}, function errorCallback(response) {
 			}).finally(function(){
@@ -77,13 +77,59 @@ app.controller('ListController', function($scope, $http, AjaxService) {
 app.controller('UserListController', function($scope, $controller) {
 	$controller('ListController', {$scope: $scope});
 	$scope.url = "/nepcore/auth/users/";
+	$scope.editing = false;
+	$scope.editError = null;
 
-	$scope.edit = function(){
-		console.log("NOT IMPLEMENTED!")
+	$scope.edit_group = function(userPK){
+		for (group in $scope.groups){
+			g = $scope.groups[group]
+			if (g.groupName == $scope.objectList[$scope.indexPKMap[userPK]].fields.groups[0]){
+				$scope.group = g.groupPK;
+			};
+		};
+		console.log($scope.group);
+		$scope.user = userPK;
+	};
+
+	$scope.set_groups = function(){
+		$scope.ajax.get('/nepcore/auth/groups/', function(success, data){
+			$scope.groups = data
+		});
+	}
+
+	$scope.save_edit = function(){
+		$scope.editing = true;
+		data = {
+			group: $scope.group,
+			user: $scope.user
+		};
+		$scope.ajax.post('/nepcore/auth/users/edit/group/', data, function(success, data){
+			if (success){
+				$('#editModal').modal('hide');
+				for (group in $scope.groups){
+					g = $scope.groups[group]
+					if (g.groupPK == $scope.group){
+						$scope.groupName = g.groupName;
+					};
+				};
+				$scope.objectList[$scope.indexPKMap[$scope.user]].fields.groups[0] = $scope.groupName;
+				$scope.groupName = "";
+				$scope.editError = null;
+			}
+			else{
+				$scope.editError = data.msg;
+			}
+			$scope.editing = false;
+		});
 	};
 
 	$scope.delete = function(){
 		console.log("NOT IMPLEMENTED!")
+	};
+
+	$scope.close_modal = function(){
+		$('#editModal').modal('hide');
+		$scope.editError = null;
 	};
 });
 
@@ -111,7 +157,7 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.edit = function(itemPK){
 		state = $state.get($scope.edit_state);
-		itemTypeName = $scope.objectList[$scope.itemPKMap[itemPK]].fields.itemType.name;
+		itemTypeName = $scope.objectList[$scope.indexPKMap[itemPK]].fields.itemType.name;
 		$state.go($scope.create_state, {url: state.data.my_link + itemTypeName + "/" + itemPK});
 	};
 
@@ -125,7 +171,10 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.email = function(){
 		$scope.emailing = true;
-		data = {items: $scope.selectedItems, toEmail: $scope.toEmail}
+		data = {
+			items: $scope.selectedItems,
+			toEmail: $scope.toEmail
+		};
 		$scope.ajax.post('/nepcore/item/email/items/', data, function(success, data){
 			if (success){
 				$('#emailModal').modal('hide');
