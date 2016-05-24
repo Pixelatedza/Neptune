@@ -22,6 +22,7 @@ class ItemView(TemplateView):
 		return context
 
 class PagedItemView(NEPPaginatedView):
+	paginate_by = 25
 	model = Item
 	fields = ('name','itemType')
 

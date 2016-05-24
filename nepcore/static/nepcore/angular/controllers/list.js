@@ -106,7 +106,6 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 	$scope.view = function(itemPK){
 		$scope.ajax.get('/nepcore/item/get/item/'+ itemPK, function(success, data){
 			$scope.item = data;
-			console.log($scope.item)
 		});
 	};
 

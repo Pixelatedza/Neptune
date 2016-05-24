@@ -10,9 +10,7 @@ app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 			url: "/nepcore/states/",
 			}).then(function successCallback(response) {
 				loadStates(response.data);
-				console.log($state)
 				$state.go('index', {state: $state});
-				console.log($state.get())
 			}, function errorCallback(response) {
 			});
 
