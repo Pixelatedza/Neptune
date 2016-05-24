@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 
 class ItemType(models.Model):
-    #different item types
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=50)
 
@@ -13,9 +12,9 @@ class ItemType(models.Model):
         return self.name
 
 class Item(models.Model):
-    #different item
     name = models.CharField(max_length=50)
     itemType = models.ForeignKey(ItemType)
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -43,7 +42,7 @@ class Attribute(models.Model):
         return self.label
 
 class ItemAttribute(models.Model):
-    #which specific items has which properties?
+    #item type and attribute relationship.
     itemType = models.ForeignKey(ItemType)
     attribute = models.ForeignKey(Attribute)
 
@@ -51,7 +50,7 @@ class ItemAttribute(models.Model):
         return self.itemType.name
 
 class ItemAttributeValue(models.Model):
-    #which value belong to a property for a specific item.
+    #item, attribute and value.
     item = models.ForeignKey(Item)
     attribute = models.ForeignKey(Attribute)
     value = models.CharField(max_length=50)

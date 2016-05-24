@@ -53,6 +53,11 @@ class HandleItems(Items):
 
         return errors
 
+    def delete_item(self, itemPK):
+        item = Item.objects.get(pk=itemPK)
+        item.archived = True
+        item.save()
+
     def is_valid(self):
         #validate input for item creation/updating.
 
@@ -179,13 +184,14 @@ class HandleItems(Items):
 
     @classmethod
     def get_all_items_for_type(self, itemTypePK):
-        #Return all items of a specified item type.
+        #Return all items of a specified item type, except if it is archived.
         returnItems = []
         itemType = ItemType.objects.get(pk=itemTypePK)
 
         for item in Item.objects.all().filter(itemType=itemType):
-            returnItems.append({'itemID': item.id,
-                                'itemName': item.dataType})
+            if not item.archived:
+                returnItems.append({'itemID': item.id,
+                                    'itemName': item.dataType})
 
         return {'items': returnItems}
 
