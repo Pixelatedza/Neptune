@@ -29,9 +29,6 @@ class HandleItems(Items):
         self.errors = []
 
     def _validate_single_fields(self, data):
-    # TEMP: Ek het die net gemaak om singular fields wat nie van 'n dynamic form
-    # af kom nie te validate. Dis basically presies dieselfde as jou onderste function.
-    # Net gemaak om my form verder te kry, Ek dink ons het verby mekaar gepraat.
         errors = {}
 
         for k, v in data.iteritems():
@@ -52,44 +49,17 @@ class HandleItems(Items):
             else:
                 error = self._is_valid_data(attr.dataType, value)
                 if error:
-                    errors[_id] = error
-
-        return errors
-
-    def _validate_attributes(self, data):
-        errors = {}
-
-        for k, v in data.iteritems():
-            _id = k
-            value = v
-            attr_errors = {}
-
-            try:
-                attr = Attribute.objects.get(id=_id)
-            except:
-                attr_errors[_id] = 'No attributes exist with given id.'
-
-            if not value:
-                attr_errors['value'] = 'No value given for attribute.'
-
-            if attr_errors:
-                errors[_id] = attr_errors
-            else:
-                error = self._is_valid_data(attr.dataType, value)
-                if error:
-                    attr_errors['value'] = value
-                    attr_errors['error'] = error
                     errors[_id] = error
 
         return errors
 
     def is_valid(self):
-        #validate input for item creation.
+        #validate input for item creation/updating.
 
         self.errors = {}
         validated = True
 
-        #expected input:
+        #expected input for item creation:
         # {
         #   'itemType': '1',
         #   'itemName': '320d',
@@ -98,7 +68,23 @@ class HandleItems(Items):
         #   '28': 'Greater than beetle'
         # }
 
+        #expected input for item update:
+        # {
+        #   'itemPK: '1',
+        #   'itemType': '1',
+        #   'itemName': '320d',
+        #   '232': 'almost grey',
+        #   '23': 'The fastest diesel',
+        #   '28': 'Greater than beetle'
+        # }
+
         temp = self.data.copy()
+
+        create = True
+
+        if 'itemPK' in temp:
+            create = False
+            del temp['itemPK']
 
         if 'itemType' in temp:
             try:
@@ -118,17 +104,19 @@ class HandleItems(Items):
         else:
             del temp['itemName']
 
-
         attrErrors = self._validate_single_fields(temp)
 
-        # Ek het die verander want die is direkte fields nie dynamic form fields nie.
         if attrErrors:
             self.errors = attrErrors
             validated = False
 
         if validated:
-            self._create_item_with_attributes(self.data)
-            return True
+            if create:
+                self._create_item_with_attributes(self.data)
+                return True
+            else:
+                self._update_item_and_attributes(self.data)
+                return True
         else:
             return False
 
@@ -138,7 +126,6 @@ class HandleItems(Items):
         obj.save()
         return obj
 
-    #public methods
     def _create_item_with_attributes(self, data):
     #creates item and populate its properties values.
         itemT = ItemType.objects.get(id=data['itemType'])
@@ -151,6 +138,22 @@ class HandleItems(Items):
             attribute = Attribute.objects.get(id=k)
             self._create_item_attr_value(item, attribute, v)
 
+    def _update_item_and_attributes(self, data):
+        #updates item and its properties values.
+        item = data['itemPK']
+        itemT = ItemType.objects.get(id=data['itemType'])
+
+        item.name = data['itemName']
+
+        del data['itemPK']
+        del data['itemType']
+        del data['itemName']
+
+        for k, v in data.iteritems():
+            attribute = Attribute.objects.get(id=k)
+            attribute.value = v
+            attribute.save()
+
     @classmethod
     def get_item_values(self, itemID):
     #returns a dict of field values for an item
@@ -159,8 +162,6 @@ class HandleItems(Items):
         objs = ItemAttributeValue.objects.all().filter(item=item)
 
         for obj in objs:
-            # fields.append({'label': obj.attribute.label,
-            #                'value': obj.value})
             fields.update({obj.attribute.label: obj.value})
 
         return {'item': item.name, 'fields': fields, 'itemType': item.itemType.name}
@@ -177,10 +178,10 @@ class HandleItems(Items):
         return {'items': returnItems}
 
     @classmethod
-    def get_all_items_for_type(self, itemTypeName):
+    def get_all_items_for_type(self, itemTypePK):
         #Return all items of a specified item type.
         returnItems = []
-        itemType = ItemType.objects.get(name=itemTypeName)
+        itemType = ItemType.objects.get(pk=itemTypePK)
 
         for item in Item.objects.all().filter(itemType=itemType):
             returnItems.append({'itemID': item.id,
@@ -307,21 +308,13 @@ class HandleItemTypes(Items):
         return result
 
     @classmethod
-    def get_item_type_attrs(self, itemTypeName):
+    def get_item_type_attrs(self, itemTypePK):
     #expects an itemType name
     #returns a dict with attribute types as follows:
     # {'itemTypeId': 0, 'fields': [{'fieldId': 0, 'dataType': 'str', 'label': 'Name'}]}
 
         fields = []
-        itemType = ItemType.objects.get(name=itemTypeName)
+        itemType = ItemType.objects.get(pk=itemTypePK)
         itAts = ItemAttribute.objects.all().filter(itemType=itemType)
-        result = {}
-
-        ## Die is baie meer generic en useful vir my as jy die itAts direk return.
-        # for itAt in itAts:
-        #     attr = itAt.attribute
-        #     fields.append({'fieldId': attr.id,
-        #                    'dataType': attr.dataType,
-        #                    'label': attr.label})
 
         return itAts
