@@ -29,6 +29,7 @@ app.controller('postController', function($scope, $http) {
 	// calling our submit function.
 	$scope.submitForm = function(url) {
 		// Posting data as json
+		console.log($scope.formData)
 		$http({
 			method: 'POST',
 			url: url,

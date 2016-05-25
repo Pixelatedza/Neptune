@@ -6,7 +6,7 @@ class ItemType(models.Model):
     description = models.CharField(max_length=50)
 
     def natural_key(self):
-        return {"name":self.name, "description":self.description}
+        return {"pk": self.pk, "name":self.name, "description":self.description}
 
     def __str__(self):
         return self.name

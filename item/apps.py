@@ -86,6 +86,8 @@ class HandleItems(Items):
 
         temp = self.data.copy()
 
+        print temp
+
         create = True
 
         if 'itemPK' in temp:
@@ -146,19 +148,27 @@ class HandleItems(Items):
 
     def _update_item_and_attributes(self, data):
         #updates item and its properties values.
-        item = data['itemPK']
+        item = Item.objects.get(pk=data['itemPK'])
         itemT = ItemType.objects.get(id=data['itemType'])
 
         item.name = data['itemName']
+        item.save()
 
         del data['itemPK']
         del data['itemType']
         del data['itemName']
 
         for k, v in data.iteritems():
-            attribute = Attribute.objects.get(id=k)
-            attribute.value = v
-            attribute.save()
+            # If an item was created without a value for a specific field, that value
+            # will not show up in itemAttributeValue. This will cause an DoesNotExist
+            # error. Now it will create that itemAttributeValue if it does not exist.
+            try:
+                attribute = ItemAttributeValue.objects.get(item=item.pk, attribute=k)
+                attribute.value = v
+                attribute.save()
+            except:
+                attribute = Attribute.objects.get(id=k)
+                self._create_item_attr_value(item, attribute, v)
 
     @classmethod
     def get_item_values(self, itemID):
@@ -321,7 +331,8 @@ class HandleItemTypes(Items):
     # {'itemTypeId': 0, 'fields': [{'fieldId': 0, 'dataType': 'str', 'label': 'Name'}]}
 
         fields = []
-        itemType = ItemType.objects.get(pk=itemTypePK)
-        itAts = ItemAttribute.objects.all().filter(itemType=itemType)
+        #itemType = ItemType.objects.get(pk=itemTypePK)
+        itAts = ItemAttribute.objects.all().filter(itemType=itemTypePK)
+        print itAts
 
         return itAts

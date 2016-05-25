@@ -71,14 +71,14 @@ class CreateEditItemView(TemplateView):
 
 	def get(self, request, itemTypePK=None, item=None):
 		itemName = None
-		itemValues = None
+		itemValues = {'fields':{}}
 		if item:
 			itemValues = HandleItems.get_item_values(item)
 			itemName = itemValues['item']
-		form = ItemForm(initial={'itemType': itemTypePK, 'itemName': itemName, 'itemPk': item})
+		form = ItemForm(initial={'itemType': itemTypePK, 'itemName': itemName, 'itemPK': item})
 		fields = HandleItemTypes.get_item_type_attrs(itemTypePK)
 		for field in fields:
-			if itemValues:
+			if field.attribute.label in itemValues['fields']:
 				form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](
 					label=field.attribute.label,
 					initial=itemValues['fields'][field.attribute.label]

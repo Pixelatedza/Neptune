@@ -78,9 +78,16 @@ class NEPPaginatedView(ListView):
 		return super(NEPPaginatedView, self).get(request, *args, **kwargs)
 
 	def post(self, request, *args, **kwargs):
-		self.object_list = self.get_queryset()
-		allow_empty = self.get_allow_empty()
 		self.json = json.loads(self.request.body)
+		self.object_list = self.get_queryset()
+		if len(self.json['filters']) > 0:
+			filters = {}
+			for f in self.json['filters']:
+				if 'value' in f:
+					filters['{0}'.format(f['field'])] = f['value']
+			self.object_list = self.object_list.filter(**filters)
+
+		allow_empty = self.get_allow_empty()
 		
 		if self.json.get('paginateBy'):
 			self.paginate_by = self.json.get('paginateBy')

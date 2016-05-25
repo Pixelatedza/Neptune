@@ -1,5 +1,6 @@
 app.controller('ListController', function($scope, $http, AjaxService) {
 	$scope.url = "";
+	$scope.filters = [];
 	$scope.loading = true;
 	$scope.pageObj = {}; // The page object
 	$scope.paginator = {}; // paginator
@@ -42,7 +43,8 @@ app.controller('ListController', function($scope, $http, AjaxService) {
 			url: $scope.url,
 			data: {
 				page: page_number,
-				paginateBy: $scope.paginator.perPage
+				paginateBy: $scope.paginator.perPage,
+				filters: $scope.filters
 			},
 			}).then(function successCallback(response) {
 				$scope.paginator = response.data.paginator;
@@ -167,7 +169,7 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.edit = function(itemPK){
 		state = $state.get($scope.edit_state);
-		itemTypePK = $scope.objectList[$scope.indexPKMap[itemPK]].pk;
+		itemTypePK = $scope.objectList[$scope.indexPKMap[itemPK]].fields.itemType.pk;
 		$state.go($scope.create_state, {url: state.data.my_link + itemTypePK + "/" + itemPK});
 	};
 
@@ -183,6 +185,21 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 
 	$scope.export = function(){
 		$scope.ajax.postDownload('/nepcore/item/export/items/', $scope.selectedItems);
+	};
+
+	$scope.import = function(){
+		//$scope.ajax.post('/nepcore/item/export/items/', $scope.selectedItems);
+	};
+
+	$scope.set_filters = function(itemTypePK){
+		$scope.filters = []
+		if (itemTypePK){
+			$scope.filters.push({
+				field: 'itemType',
+				value: itemTypePK
+			});
+		}
+		$scope.getPage(1);
 	};
 
 	$scope.email = function(){
