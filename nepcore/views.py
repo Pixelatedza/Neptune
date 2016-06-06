@@ -1,6 +1,7 @@
 from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
@@ -11,7 +12,7 @@ from nepcore.menu import menu
 from nepcore.state import state_manager
 import json
 
-class BaseView(TemplateView):
+class BaseView(LoginRequiredMixin, TemplateView):
 	template_name = "nepcore/base_content.html"
 
 	def get_context_data(self, **kwargs):
@@ -39,7 +40,6 @@ class GetStates(TemplateView):
 
 	def get(self, request, *args, **kwargs):
 		states = state_manager.states_to_json()
-		print states
 		return JsonResponse(states, status=200, safe=False)
 
 class NEPPaginatedView(ListView):
