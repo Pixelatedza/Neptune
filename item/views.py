@@ -85,7 +85,8 @@ class CreateEditItemView(TemplateView):
 				)
 			else:
 				form.fields[str(field.attribute.id)] = CUSTOM_FIELD_MAP[field.attribute.dataType](
-					label=field.attribute.label
+					label=field.attribute.label,
+					initial=field.attribute.defaultValue
 				)
 
 		context = {"itemForm":form}
