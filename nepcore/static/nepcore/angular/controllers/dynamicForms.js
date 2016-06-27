@@ -24,6 +24,7 @@ app.controller('dynamicForms', function($scope, $http, DynamicForm) {
 	// This handles the forms html when adding and removing forms.
 	$scope.forms = [DynamicForm.createNew(0)];
 	$scope.count = 1
+
 	$scope.removeForm = function(i){
 		$scope.forms.splice(i, 1);
 		forms = $scope.forms.slice(i)
@@ -32,6 +33,7 @@ app.controller('dynamicForms', function($scope, $http, DynamicForm) {
 		};
 		$scope.count = $scope.count - 1;
 	};
+
 	$scope.addForm = function(formData){
 		$scope.forms.push(DynamicForm.createNew($scope.count, formData));
 		$scope.count = $scope.count + 1;

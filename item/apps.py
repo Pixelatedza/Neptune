@@ -41,7 +41,7 @@ class HandleItems(Items):
             except:
                 attr_errors[_id] = 'No attributes exist with given id.'
 
-            if not value:
+            if not value and value != 0:
                 attr_errors['value'] = 'No value given for attribute.'
 
             if attr_errors:
@@ -85,8 +85,6 @@ class HandleItems(Items):
         # }
 
         temp = self.data.copy()
-
-        print temp
 
         create = True
 
@@ -333,6 +331,5 @@ class HandleItemTypes(Items):
         fields = []
         #itemType = ItemType.objects.get(pk=itemTypePK)
         itAts = ItemAttribute.objects.all().filter(itemType=itemTypePK)
-        print itAts
 
         return itAts
