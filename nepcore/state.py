@@ -45,5 +45,5 @@ class StateObj(StateManager):
 		return self.name
 
 state_manager = StateManager()
-index_state = state_manager.register(StateObj(name="index", link="/nepcore/index/"))
+index_state = state_manager.register(StateObj(name="index", link="/nepcore/item/"))
 state_manager.auto_discover()

@@ -18,7 +18,6 @@ class Menu(object):
 	def auto_discover(self, request=None):
 		# this is a mess, must make menus dynamic and work from json.
 		self.children = []
-		self.register(text="Dashboard",state=index_state)
 		self.request = request
 		for app in settings.INSTALLED_APPS:
 			try:
@@ -62,4 +61,3 @@ class MenuObj(Menu):
 		return self.text
 
 menu = Menu()
-menu.register(text="Dashboard",state=index_state)

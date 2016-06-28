@@ -24,6 +24,7 @@ class ItemView(TemplateView):
 class PagedItemView(NEPPaginatedView):
 	paginate_by = 25
 	model = Item
+	queryset = Item.objects.filter(archived=False)
 	fields = ('name','itemType')
 
 class ItemTypeFields(TemplateView):
