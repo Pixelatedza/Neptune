@@ -8,6 +8,5 @@ urlpatterns = patterns('',
 	url(r'^login/$', views.LoginView.as_view(), name='loginv'),
 	url(r'^logout/$', views.LogoutView.as_view(), name='logoutv'),
 	url(r'^states/$', views.GetStates.as_view(), name='get_states'),
-	url(r'^item/', include('item.urls')),
 	url(r'^auth/', include('nepauth.urls')),
 )

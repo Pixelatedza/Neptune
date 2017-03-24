@@ -8,4 +8,5 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^nepcore/', include('nepcore.urls')),
+    url(r'^item/', include('item.urls'))
 ]

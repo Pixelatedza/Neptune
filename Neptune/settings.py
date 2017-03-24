@@ -113,3 +113,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = '/nepcore/login/'
+
+
+## NEPCORE STUFF
+
+DEFAULT_STATE = "item_type_state"

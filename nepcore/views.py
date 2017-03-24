@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.core import serializers
 from nepcore.menu import menu
 from nepcore.state import state_manager
+from django.conf import settings
 import json
 
 class BaseView(LoginRequiredMixin, TemplateView):
@@ -17,7 +18,7 @@ class BaseView(LoginRequiredMixin, TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(BaseView, self).get_context_data(**kwargs)
-		menu.auto_discover(self.request)
+		menu.build_menu(self.request)
 		context['menu'] = menu
 		context['state_manager'] = state_manager
 		return context
@@ -27,20 +28,10 @@ class IndexView(TemplateView):
 
 class GetStates(TemplateView):
 
-	def _states_to_json(self, states):
-		jsonStates = []
-		for state in states:
-			jsonStates.append({
-				"name": state.name,
-				"url": state.url,
-				"link": state.link,
-				"params": state.params
-			})
-		return jsonStates
-
 	def get(self, request, *args, **kwargs):
 		states = state_manager.states_to_json()
-		return JsonResponse(states, status=200, safe=False)
+		json = {"default_state": settings.DEFAULT_STATE, "states":states}
+		return JsonResponse(json, status=200, safe=False)
 
 class NEPPaginatedView(ListView):
 	paginate_by = 25

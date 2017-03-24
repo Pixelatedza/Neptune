@@ -15,8 +15,8 @@ class Menu(object):
 		self.parent = kwargs.get('menu', None)
 		self.icon = kwargs.get('icon', None)
 
-	def auto_discover(self, request=None):
-		# this is a mess, must make menus dynamic and work from json.
+	def build_menu(self, request=None):
+		# this is a mess, must make menus dynamic
 		self.children = []
 		self.request = request
 		for app in settings.INSTALLED_APPS:

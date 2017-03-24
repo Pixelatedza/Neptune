@@ -9,7 +9,7 @@ app.controller('copyItemType', function($scope, $http) {
 		// Posting data as json
 		$http({
 			method: 'POST',
-			url: "/nepcore/item/get/item-type-fields/",
+			url: "/item/get/item-type-fields/",
 			data: $scope.formData
 			}).then(function successCallback(response) {
 				$scope.fields = response.data;
