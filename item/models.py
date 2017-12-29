@@ -13,7 +13,7 @@ class ItemType(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=50)
-    itemType = models.ForeignKey(ItemType)
+    itemType = models.ForeignKey(ItemType, on_delete=models.CASCADE)
     archived = models.BooleanField(default=False)
 
     def __str__(self):
@@ -43,16 +43,16 @@ class Attribute(models.Model):
 
 class ItemAttribute(models.Model):
     #item type and attribute relationship.
-    itemType = models.ForeignKey(ItemType)
-    attribute = models.ForeignKey(Attribute)
+    itemType = models.ForeignKey(ItemType, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.itemType.name
 
 class ItemAttributeValue(models.Model):
     #item, attribute and value.
-    item = models.ForeignKey(Item)
-    attribute = models.ForeignKey(Attribute)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     value = models.CharField(max_length=50)
 
     def __str__(self):

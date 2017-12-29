@@ -2,6 +2,5 @@
 *.sqlite3
 *.py.orig
 *.idea
-Neptune/local.py
-Neptune\local.py
 *.DS_Store
+Neptune/local.py

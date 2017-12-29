@@ -311,7 +311,7 @@ class HandleItemTypes(Items):
                     self._create_item_attr_relation(itemType, newAttr)
                 return True
         except Exception as e:
-            print e
+            print(e)
             return False
 
     @classmethod

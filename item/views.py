@@ -112,7 +112,7 @@ class DeleteItemView(TemplateView):
 			HandleItems.delete_item(data['itemPK'])
 			return JsonResponse({'msg':'Succesfully created Item Type'}, status=200)
 		except Exception as e:
-			print e
+			print(e)
 			return JsonResponse({'msg':'Something went wrong'}, status=400)
 
 class ExportItemView(TemplateView):

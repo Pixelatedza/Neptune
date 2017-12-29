@@ -1,7 +1,7 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from item import views
 
-urlpatterns = patterns('',
+urlpatterns = [
 	url(r'^$', views.ItemView.as_view(), name='item_select'),
 	url(r'^create/item-type/$', views.CreateItemTypeView.as_view(), name='item_type_create'),
 	url(r'^get/item-type-fields/$', views.ItemTypeFields.as_view(), name='item_type_fields'),
@@ -13,4 +13,4 @@ urlpatterns = patterns('',
 	url(r'^list/items/$', views.PagedItemView.as_view(), name='item_list'),
 	url(r'^export/items/$', views.ExportItemView.as_view(), name='item_export'),
 	url(r'^email/items/$', views.EmailItemView.as_view(), name='item_export'),
-)
+]
