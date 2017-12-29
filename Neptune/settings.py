@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'solo.apps.SoloAppConfig',
-    'nepcore',
-    'item',
-    'tools',
-    'nepauth'
+    'nepcore'
+#    'item',
+#    'tools'
+    #'nepauth'
 ]
 
 MIDDLEWARE = [
@@ -149,5 +149,5 @@ SOLO_CACHE = 'local'
 
 ## NEPCORE STUFF
 
-DEFAULT_STATE = "item_type_state"
+DEFAULT_STATE = "index"
 

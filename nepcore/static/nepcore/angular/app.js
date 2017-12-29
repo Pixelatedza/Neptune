@@ -10,7 +10,6 @@ app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 			url: "/nepcore/states/",
 			}).then(function successCallback(response) {
 				loadStates(response.data.states);
-				console.log(response.data.default_state)
 				$state.go(response.data.default_state, {state: $state});
 			}, function errorCallback(response) {
 			});
@@ -19,7 +18,7 @@ app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 
 app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
 	loadStates = function(states){
-		stateNameLinks = {}
+		stateNameLinks = {};
 		for (state in states){
 			s = states[state];
 			if (s.params){

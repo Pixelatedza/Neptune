@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.core import serializers
 from nepcore.menu import menu
 from nepcore.state import state_manager
+from nepcore.models import NEPSiteConfig
 from django.conf import settings
 import json
 
@@ -30,7 +31,7 @@ class GetStates(TemplateView):
 
 	def get(self, request, *args, **kwargs):
 		states = state_manager.states_to_json()
-		json = {"default_state": settings.DEFAULT_STATE, "states":states}
+		json = {"default_state": NEPSiteConfig.get_solo().default_view, "states":states}
 		return JsonResponse(json, status=200, safe=False)
 
 class NEPPaginatedView(ListView):

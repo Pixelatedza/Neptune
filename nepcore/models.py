@@ -11,6 +11,7 @@ class NEPPermission(models.Model):
 
 class NEPSiteConfig(SingletonModel):
 	site_name = models.CharField(max_length=255, default='Site Name')
+	default_view = models.CharField(max_length=255, default='index')
 	maintenance_mode = models.BooleanField(default=False)
 
 	@property

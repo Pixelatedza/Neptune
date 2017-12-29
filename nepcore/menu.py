@@ -3,7 +3,7 @@ from django.conf import settings
 from django.template.loader import get_template
 from django import template
 from django.utils.safestring import mark_safe
-from importlib import import_module
+from importlib import import_module, reload
 from nepcore.state import index_state
 
 class Menu(object):
