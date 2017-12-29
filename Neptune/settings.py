@@ -132,6 +132,7 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = '/nepcore/login/'
 
+<<<<<<< HEAD
 # Cacheing
 
 CACHES = {
@@ -145,3 +146,9 @@ CACHES = {
 }
 
 SOLO_CACHE = 'local'
+=======
+
+## NEPCORE STUFF
+
+DEFAULT_STATE = "item_type_state"
+>>>>>>> origin/test

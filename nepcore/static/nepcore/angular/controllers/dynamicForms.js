@@ -5,7 +5,7 @@ app.controller('dynamicForms', function($scope, $http, DynamicForm) {
 		// Posting data as json
 		$http({
 			method: 'POST',
-			url: "/nepcore/item/get/item-type-fields/",
+			url: "/item/get/item-type-fields/",
 			data: {itemName: itemName}
 			}).then(function successCallback(response) {
 				// Potential bug if no fields are returned, forms will be cleared.
