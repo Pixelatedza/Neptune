@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'solo.apps.SoloAppConfig',
     'nepcore',
     'item',
     'tools',
@@ -132,7 +133,6 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = '/nepcore/login/'
 
-<<<<<<< HEAD
 # Cacheing
 
 CACHES = {
@@ -146,9 +146,8 @@ CACHES = {
 }
 
 SOLO_CACHE = 'local'
-=======
 
 ## NEPCORE STUFF
 
 DEFAULT_STATE = "item_type_state"
->>>>>>> origin/test
+
