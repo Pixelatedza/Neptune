@@ -1,4 +1,5 @@
 {% extends "nepcore/base.html" %}
+{% load solo_tags %}
 
 {% block css %}
 	<link rel="stylesheet" href="/static/nepcore/css/main.css">
@@ -14,6 +15,7 @@
 {% endblock %}
 
 {% block body %}
+	{% get_solo 'nepcore.NEPSiteConfig' as site_config %}
 	<body class="skin-black sidebar-mini" ng-app="NeptuneApp">
 	<div class="wrapper">
 
@@ -21,9 +23,9 @@
 			<!-- Logo -->
 			<a href="index2.html" class="logo">
 				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini"><b>HG</b></span>
+				<span class="logo-mini"><b>{{ site_config.short_site_name }</b></span>
 				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg"><b>Hatfield Group</b></span>
+				<span class="logo-lg"><b>{{ site_config.site_name }}</b></span>
 			</a>
 			<nav class="navbar navbar-static-top" role="navigation">
 			  <!-- Sidebar toggle button-->

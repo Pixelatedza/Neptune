@@ -41,8 +41,7 @@ class Menu(object):
 
 	def render(self):
 		tmpl = get_template(self.template_path)
-		context = template.Context({'menu': self})
-		html = tmpl.render(context)
+		html = tmpl.render({'menu': self})
 		return html
 
 	def __str__(self):
