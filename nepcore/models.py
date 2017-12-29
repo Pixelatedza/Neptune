@@ -1,4 +1,5 @@
 from django.db import models
+from solo.models import SingletonModel
 
 class NEPPermission(models.Model):
 	""" This is a dummy model to register custom permissions """
