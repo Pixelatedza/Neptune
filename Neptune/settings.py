@@ -40,7 +40,7 @@ SESSION_COOKIE_AGE = 300
 
 ALLOWED_HOSTS = []
 
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 # Application definition
 

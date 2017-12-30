@@ -4,3 +4,5 @@
 *.idea
 *.DS_Store
 Neptune/local.py
+*.pydevproject
+.project
