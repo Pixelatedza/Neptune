@@ -52,10 +52,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'solo.apps.SoloAppConfig',
-    'nepcore'
+    'channels',
+    'nepcore.apps.NepCore',
+    #'nepcore.apps.NepAuth'
 #    'item',
 #    'tools'
-    #'nepauth'
+#    'nepauth'
 ]
 
 MIDDLEWARE = [
@@ -151,3 +153,11 @@ SOLO_CACHE = 'local'
 
 DEFAULT_STATE = "index"
 
+## Channel routing stuff. Part of the Websocket implementation 
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "nepcore.routing.channel_routing",
+    },
+}

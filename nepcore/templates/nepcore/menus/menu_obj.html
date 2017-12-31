@@ -10,7 +10,7 @@
 	</a>
 	{% if menu.children %}
 	<ul class="treeview-menu">
-		{% for child in menu.children %}
+		{% for text, child in menu.children.items %}
 			{{child.render}}
 		{% endfor %}
 	</ul>

@@ -1,6 +1,6 @@
 <ul class="sidebar-menu">
 	<!-- <li class="header">MAIN NAVIGATION</li> -->
-	{% for child in menu.children %}
+	{% for text, child in menu.children.items %}
 		{{child.render}}
 	{% endfor %}
 </ul>

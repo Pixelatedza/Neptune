@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from importlib import import_module
 
@@ -6,9 +7,9 @@ class StateManager(object):
 		self.states = []
 
 	def auto_discover(self):
-		for app in settings.INSTALLED_APPS:
+		for app in apps.get_app_configs():
 			try:
-				import_module('%s.%s' % (app, "state"))
+				import_module('%s.%s' % (app.name, "state"))
 			except ImportError:
 				pass
 			except Exception as e:
@@ -45,5 +46,5 @@ class StateObj(StateManager):
 		return self.name
 
 state_manager = StateManager()
-index_state = state_manager.register(StateObj(name="index", link="/nepcore/index/"))
+index_state = state_manager.register(StateObj(name="nep_index", link="/nepcore/index/"))
 state_manager.auto_discover()

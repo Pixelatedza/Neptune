@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.core import serializers
 from nepcore.menu import menu
 from nepcore.state import state_manager
-from nepcore.models import NEPSiteConfig
+from nepcore.models import NEPSiteConfig, NEPMenu
 from django.conf import settings
 import json
 
@@ -26,6 +26,19 @@ class BaseView(LoginRequiredMixin, TemplateView):
 
 class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
+
+class GetMenus(TemplateView):
+	
+	def get(self, request, *args, **kwargs):
+		qs = NEPMenu.objects.filter(parent=None)
+		for m in qs:
+			menu.register(icon=m.icon, link=m.link, parent=m.parent, state=m.state, text=m.text)
+		states = state_manager.states_to_json()
+		qs_json = serializers.serialize('json', qs)
+		return JsonResponse(qs_json, status=200, safe=False)
+	
+	def register_menus(self):
+		pass
 
 class GetStates(TemplateView):
 
