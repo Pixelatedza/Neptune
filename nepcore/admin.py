@@ -14,11 +14,5 @@ class NEPMenuAdmin(admin.ModelAdmin):
 @admin.register(NEPState)
 class NEPStateAdmin(admin.ModelAdmin):
     list_display = ('name', 'link', 'url', 'params')
-    
-    def get_queryset(self, request):
-        qs = super(NEPStateAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        return qs.exclude(name='index')
 
 admin.site.register(NEPSiteConfig, SingletonModelAdmin)
