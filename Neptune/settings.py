@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'solo.apps.SoloAppConfig',
     'channels',
     'nepcore.apps.NepCore',
-    #'nepcore.apps.NepAuth'
+    'nepcore.apps.NepAuth'
 #    'item',
 #    'tools'
 #    'nepauth'

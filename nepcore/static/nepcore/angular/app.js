@@ -6,14 +6,31 @@ var app = angular.module('NeptuneApp', ['ui.router','ngFileSaver']).config(funct
 
 app.run(['$rootScope','$state', '$http', function ($rootScope, $state, $http) {
 	$http({
-			method: 'GET',
-			url: "/nepcore/states/",
-			}).then(function successCallback(response) {
-				loadStates(response.data.states);
-				$state.go(response.data.default_state, {state: $state});
-			}, function errorCallback(response) {
-			});
+		method: 'GET',
+		url: "/nepcore/states/",
+		}).then(function successCallback(response) {
+			loadStates(response.data.states);
+			$state.go(response.data.default_state);
+		}, function errorCallback(response) {
+	});
+	
+	// Create websocket and setup listeners for specifics streams.
+	// This code needs to be put somewhere cleaner, I'm not a fan of having demultiplex defined
+	// over and over in the app.run.
+	const webSocketBridge = new channels.WebSocketBridge();
+	webSocketBridge.connect('/real_time_updates/');
+	webSocketBridge.listen();
 
+	webSocketBridge.demultiplex('menu', function(action, stream) {
+		console.log(action, stream);
+		$rootScope.$broadcast('reload.menus');
+	});
+	webSocketBridge.demultiplex('state', function(action, stream) {
+		console.info(action, stream);
+	});
+	
+	webSocketBridge.socket.addEventListener('open', function() { console.log("Connected to notification socket"); });
+	webSocketBridge.socket.addEventListener('close', function() { console.log("Disconnected to notification socket"); });
 }]);
 
 app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
@@ -34,7 +51,6 @@ app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
 						return $stateParams.url;
 					}
 				});		
-
 			}else{
 				$stateProvider.state(s.name, {
 					url: s.url,

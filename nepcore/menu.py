@@ -30,7 +30,6 @@ class Menu(object):
 		for app in apps.get_app_configs():
 			try:
 				mod = '%s.%s' % (app.name, "menu")
-				print(mod)
 				if mod not in sys.modules:
 					import_module(mod)
 				elif mod != 'nepcore.menu':
@@ -40,17 +39,25 @@ class Menu(object):
 			except Exception as e:
 				raise e
 			
-	def _build_from_db(self, query=NEPMenu.objects.filter(parent=None)):
-		#qs = NEPMenu.objects.filter(parent=None)
+	def _build_from_db(self, query=None):
+		# I'm not actually sure how to get around this check yet,
+		# if you default NEPMenu.objects.filter(parent=None) into the query keyword
+		# argument, then it works like a static variable.
+		if not query:
+			query = NEPMenu.objects.filter(parent=None)
+			
 		for menu in query:
 			self.register(icon=menu.icon, link=menu.link, parent=menu.parent, state=menu.state, text=menu.text)
-			self._build_from_db(menu.menus.all())
+			if menu.menus.all():
+				self._build_from_db(query=menu.menus.all())
 
 	def register(self, *args, **kwargs):
 		menu_obj = kwargs.get('menu_obj', None)
 		if not menu_obj:
 			menu_obj = MenuObj(**kwargs)
 		menu_obj.parent = self
+# 		if menu_obj.text in self.children:
+# 			del self.children[menu_obj.text]
 		self.children[menu_obj.text] = menu_obj
 		return menu_obj
 

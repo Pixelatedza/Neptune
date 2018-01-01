@@ -7,11 +7,12 @@
 
 {% block js %}
 	<script src="/static/nepcore/angular/app.js"></script>
+	<script src="/static/nepcore/angular/services.js"></script>
 	<script src="/static/nepcore/angular/factory.js"></script>
-	<script src="/static/nepcore/angular/directive.js"></script>
 	<script src="/static/nepcore/angular/controllers/general.js"></script>
 	<script src="/static/nepcore/angular/controllers/list.js"></script>
 	<script src="/static/nepcore/angular/controllers/dynamicForms.js"></script>
+	<script src="/static/nepcore/angular/directive.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -58,12 +59,10 @@
 		{% block menu %}
 			<aside class="main-sidebar" scroll ng-style="navOffset" style="position: fixed">
 				<!-- sidebar: style can be found in sidebar.less -->
-				<section class="sidebar">
-					{% autoescape off %}{{menu.render}}{% endautoescape on %}
+				<section class="sidebar" real-time="menus">
 				</section>
 			</aside>
 		{% endblock %}
-		<!-- <div class="content-wrapper"> -->
 		<div class="content-wrapper" ui-view>
 			{% block content %}
 			{% endblock %}

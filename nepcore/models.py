@@ -1,6 +1,7 @@
 from django.db import models
 from solo.models import SingletonModel
 from django.utils import text
+from channels.binding.websockets import WebsocketBinding
 
 class NEPPermission(models.Model):
 	""" This is a dummy model to register custom permissions """
@@ -66,6 +67,20 @@ class NEPState(models.Model):
 	
 	class Meta:
 		verbose_name = "State"
+		
+		
+class NEPMenuBinding(WebsocketBinding):
+	model = NEPMenu
+	stream = 'menu'
+	fields = ['text', 'state', 'icon', 'link']
+	
+	@classmethod
+	def group_names(cls, *args, **kwargs):
+		return ['menu-updates']
+	
+	def has_permission(self, user, action, pk):
+		return True
+
 	
 	
 	

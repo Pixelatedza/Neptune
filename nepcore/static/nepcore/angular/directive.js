@@ -11,3 +11,26 @@ app.directive("scroll", function ($window) {
 		});
 	};
 });
+
+app.directive("realTime", function($http, $compile){
+	return {
+		scope: {},
+		link: function(scope, element, attrs, controller){
+			scope.attrs = attrs;
+			scope.element = element;
+			
+			scope.reload = function() {
+				$http.get('menus/').success(function(tplContent){
+	                scope.element.children().eq(0).replaceWith($compile(tplContent)(scope));                
+	            }); 
+			};
+			
+			scope.$on("reload." + scope.attrs.realTime, function(event, data){
+				scope.reload();
+			})
+		},
+		templateUrl: function(elem, attrs){
+			return  attrs.realTime || "Specify template url. real-time='template'";
+		}
+	};
+});

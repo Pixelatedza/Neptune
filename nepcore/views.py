@@ -28,17 +28,13 @@ class IndexView(TemplateView):
 	template_name = "nepcore/index.html"
 
 class GetMenus(TemplateView):
+	template_name = "nepcore/menus/menu.html"
 	
-	def get(self, request, *args, **kwargs):
-		qs = NEPMenu.objects.filter(parent=None)
-		for m in qs:
-			menu.register(icon=m.icon, link=m.link, parent=m.parent, state=m.state, text=m.text)
-		states = state_manager.states_to_json()
-		qs_json = serializers.serialize('json', qs)
-		return JsonResponse(qs_json, status=200, safe=False)
-	
-	def register_menus(self):
-		pass
+	def get_context_data(self, **kwargs):
+		context = super(GetMenus, self).get_context_data(**kwargs)
+		menu.build_menu(self.request)
+		context['menu'] = menu
+		return context
 
 class GetStates(TemplateView):
 

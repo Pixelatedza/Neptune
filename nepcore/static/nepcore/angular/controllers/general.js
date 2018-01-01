@@ -18,7 +18,7 @@ app.controller('copyItemType', function($scope, $http) {
 	};
 });
 
-//
+
 // Deals with the posting of data over ajax, coincidentally does forms for
 // the time being as well.
 //
