@@ -1,78 +1,75 @@
 {% extends "nepcore/base.html" %}
+{% load solo_tags %}
+
+{% block css %}
+	<link rel="stylesheet" href="/static/nepcore/css/main.css">
+{% endblock %}
 
 {% block js %}
-	<script>
-		app.run(['$state', function ($state) {
-			$state.transitionTo('index');
-		}])
-
-		app.config(function($stateProvider, $urlRouterProvider){
-			$stateProvider
-				{% for state in state_manager.states %}
-					.state('{{state.name}}', {
-						url: '{{state.name}}',
-						templateUrl: '{{state.link}}'
-					})
-				{% endfor %}
-			$urlRouterProvider.otherwise('index');
-		})
-	</script>
+	<script src="/static/nepcore/angular/app.js"></script>
+	<script src="/static/nepcore/angular/services.js"></script>
+	<script src="/static/nepcore/angular/factory.js"></script>
+	<script src="/static/nepcore/angular/controllers/general.js"></script>
+	<script src="/static/nepcore/angular/controllers/list.js"></script>
+	<script src="/static/nepcore/angular/controllers/dynamicForms.js"></script>
+	<script src="/static/nepcore/angular/directive.js"></script>
 {% endblock %}
 
 {% block body %}
+	{% get_solo 'nepcore.NEPSiteConfig' as site_config %}
 	<body class="skin-black sidebar-mini" ng-app="NeptuneApp">
-	<!-- <div class="wrapper"> -->
+	<div class="wrapper">
 
 		<header class="main-header">
 			<!-- Logo -->
 			<a href="index2.html" class="logo">
 				<!-- mini logo for sidebar mini 50x50 pixels -->
-				<span class="logo-mini"><b>HG</b></span>
+				<span class="logo-mini"><b>{{ site_config.short_site_name }}</b></span>
 				<!-- logo for regular state and mobile devices -->
-				<span class="logo-lg"><b>Hatfield Group</b></span>
+				<span class="logo-lg"><b>{{ site_config.site_name }}</b></span>
 			</a>
 			<nav class="navbar navbar-static-top" role="navigation">
 			  <!-- Sidebar toggle button-->
-			  <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+			  <a class="sidebar-toggle" data-toggle="offcanvas" role="button">
 				<span class="sr-only">Toggle navigation</span>
 			  </a>
 			  <div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 
-					<li class="dropdown user user-menu">
-						<a ng-href="#" 
-						  <span class="hidden-xs">Welcome {{request.username}}
+					<li>
+						<a ui-sref='index' href="#" class="hidden-xs"> 
+						  <span>Welcome {{view.request.user}}</span>
 						</a>
 					</li>
-					<li class="dropdown user user-menu">
-						<a ng-href="/nepcore/logout/" 
-						  <span class="hidden-xs">Logout
+					<li>
+						<a ng-href="/nepcore/logout/">
+						  <i class="fa fa-sign-out hidden-lg-md"></i>
+						  <span class="hidden-xs"> Logout</span>
 						</a>
 					</li>
-					<li class="dropdown user user-menu">
-						<a ng-href="#">  <span class="hidden-xs">Powered by Neptune</span></a>
+					<li>
+						<a ui-sref='index' href="#"> <span>Powered by Neptune</span></a>
 					</li>
 
 				  </ul>
 			  </div>
 			</nav>
 		</header>
-	</body>
-	<!-- </div> -->
-	{% block menu %}
-		<aside class="main-sidebar">
-			<!-- sidebar: style can be found in sidebar.less -->
-			<section class="sidebar">
-				{% autoescape off %}{{menu.render}}{% endautoescape on %}
-			</section>
-		</aside>
-	{% endblock %}
-	<!-- <div class="content-wrapper"> -->
-	<div class="content-wrapper" ui-view>
-		{% block content %}
+		<!-- </div> -->
+		{% block menu %}
+			<aside class="main-sidebar" scroll ng-style="navOffset" style="position: fixed">
+				<!-- sidebar: style can be found in sidebar.less -->
+				<section class="sidebar" real-time="menus">
+				</section>
+			</aside>
 		{% endblock %}
+		<div class="content-wrapper" ui-view>
+			{% block content %}
+			{% endblock %}
+		</div>
+		<!-- </div> -->
 	</div>
-	<!-- </div> -->
+	</body>
 
 	{% block extra_js %}
 	{% endblock %}

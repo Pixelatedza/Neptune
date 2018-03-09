@@ -1,16 +1,18 @@
-<section class="content">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Item Form?</h3>
-                </div>
-                <form class="form-horizontal">
-                    <div class="box-body">
-                        A form is suppose to go here.
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<section class="content" ng-controller="postController">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Item Types</h3>
+				</div>
+				<div class="box-body">
+					{% for item in itemTypes %}
+						<span>{{item}}</span>
+						<span>{{itemTypes[item]}}</span>
+						<span>------------</span>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
 </section>

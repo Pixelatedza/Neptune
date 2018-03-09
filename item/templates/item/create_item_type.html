@@ -1,0 +1,117 @@
+<section class="content" ng-controller="dynamicForms">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Item Type</h3>
+					<div class="btn-group box-tools">
+						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-clone" style="margin-right: 7px"></i>Copy</button>
+						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							{% for itemPK, itemName in itemTypes.items %}
+								<li>
+									<a ng-click="getItemTypeFields('{{itemPK}}')">{{itemName}}</a>
+								</li>
+							{% endfor %}
+						</ul>
+						
+					</div>
+				</div>
+				<div class="box-body">
+					{{itemTypeForm.as_bootstrap}}
+				</div>
+				<div class="box-header with-border">
+					<h3 class="box-title">Attributes</h3>
+				</div>
+
+				<form class="form-horizontal" ng-submit="submitForm('{{url}}')">
+					{% csrf_token %}
+					<!-- This ng-repeat is what controls the dynamic forms
+						 To use dynamic forms in this manner you must use the dynamicForms controller -->
+					<div class="box-body" ng-repeat="form in forms">
+						<div class="row">
+							<div class="col-md-11 col-xs-11">
+								<div class="col-md-6">
+									<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['label']}">
+										<label class="col-xs-3 control-label" for="id_attrName_{[{form.index}]}">Name:</label>
+										<div class="col-xs-9">
+											<input class="form-control" id="id_attrName_{[{form.index}]}" maxlength="50" ng-model="form.formData.label" type="text">
+											<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['label']}">
+												<span>{[{formErrors.attributes[form.index].label}]}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['dataType']}">
+										<label class="col-xs-3 control-label" for="id_attrDataType_{[{form.index}]}">Data Type:</label>
+										<div class="col-xs-9">
+											<select class="form-control" id="id_attrDataType_{[{form.index}]}" maxlength="50" ng-model="form.formData.dataType" type="text">
+												<option value="str">Text</option>
+												<option value="int">Numbers</option>
+												<option value="dat">Date</option>
+												<option value="tim">Time</option>
+											</select>
+											<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['dataType']}">
+												<span>{[{formErrors.attributes[form.index].dataType}]}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-1 col-xs-1 no-padding">
+								<button type="button" class="btn btn-danger hidden-xs" ng-click="removeForm(form.index)"><i class="fa fa-trash"></i></button>
+								<button type="button" style="margin-left: -10px" class="btn btn-danger btn-sm visible-xs" ng-click="removeForm(form.index)"><i class="fa fa-trash"></i></button>
+							</div>							
+						</div>
+						<div class="row">
+							<div class="col-md-11 col-xs-11">
+								<div class="col-md-6">
+									<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['required']}">
+										<label class="col-xs-3 control-label" for="id_attrReq_{[{form.index}]}">Required:</label>
+										<div class="col-xs-9">
+											<input class="form-control" id="id_attrReq_{[{form.index}]}" ng-model="form.formData.required" type="checkbox">
+											<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['required']}">
+												<span>{[{formErrors.attributes[form.index].required}]}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group" ng-class="{'has-error':formErrors.attributes[{[{form.index}]}]['default']}">
+										<label class="col-xs-3 control-label" for="id_attrDef_{[{form.index}]}">Default:</label>
+										<div class="col-xs-9">
+											<input class="form-control minimal" id="id_attrDef_{[{form.index}]}" maxlength="50" ng-model="form.formData.default" type="text">
+											<div ng-class="{'bg-red color-palette nep-error':formErrors.attributes[{[{form.index}]}]['default']}">
+												<span>{[{formErrors.attributes[form.index].default}]}</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End of ng-repeat -->
+
+					<div class="box-body">
+						<div class="row">
+							<div class="col-md-11 col-xs-11" style="margin-left: 0px">
+							</div>
+							<div class="col-xs-1 col-md-1 no-padding">
+								<button type="button" class="btn btn-success hidden-xs" ng-click="addForm()"><i class="fa fa-plus"></i></button>
+								<button type="button" style="margin-left: -10px" class="btn btn-success btn-sm visible-xs" ng-click="addForm()"><i class="fa fa-plus"></i></button>
+							</div>
+						</div>
+					</div>
+
+					<div class="box-footer">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

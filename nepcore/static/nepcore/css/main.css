@@ -1,0 +1,111 @@
+.fixed_nav{
+	padding-top: 0px;
+	position: fixed;
+}
+
+.nep-error{
+	margin: 0px;
+}
+
+.nep-error>span{
+	margin: 0px;
+	padding: 3px;
+	font-size: 12px;
+}
+
+input[type="checkbox"] {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	margin-top: 7px;
+	vertical-align:middle;
+	background:url(/static/plugins/iCheck/minimal/blue.png) left top no-repeat;
+	cursor:pointer;
+}
+
+input[type="checkbox"]:hover {
+	cursor:hand;
+	background:url(/static/plugins/iCheck/minimal/blue.png) -20px top no-repeat;
+}
+
+input[type="checkbox"]:checked {
+	background:url(/static/plugins/iCheck/minimal/blue.png) -40px top no-repeat;
+}
+
+input[type="checkbox"]:disabled {
+	background:url(/static/plugins/iCheck/minimal/blue.png) -60px top no-repeat;
+}
+
+input[type="checkbox"]:disabled :checked{
+	background:url(/static/plugins/iCheck/minimal/blue.png) -80px top no-repeat;
+}
+
+.table-hover>tbody>tr:hover{
+	background-color: #E2E2E2
+}
+
+tbody>tr.selected{
+	background-color: #3C8DBC !important;
+	color: #ECF0F5 !important
+}
+
+td>i:hover{
+	color: #3c8dbc;
+}
+
+.clickable{
+	cursor: pointer;
+	cursor: hand;
+}
+
+.ajax-loading{
+	opacity: 0.2;
+}
+
+.cssload-container {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+}
+
+.cssload-container-absolute {
+	width: 100%;
+	text-align: center;
+	padding: 10px;
+	position: absolute;
+}
+
+.cssload-speeding-wheel {
+	width: 125px;
+	height: 125px;
+	margin: 0 auto;
+	border: 8px solid rgba(60,141,188,0.99);
+	border-radius: 50%;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	animation: cssload-spin 1550ms infinite linear;
+		-o-animation: cssload-spin 1550ms infinite linear;
+		-ms-animation: cssload-spin 1550ms infinite linear;
+		-webkit-animation: cssload-spin 1550ms infinite linear;
+		-moz-animation: cssload-spin 1550ms infinite linear;
+}
+
+@keyframes cssload-spin {
+	100%{ transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-o-keyframes cssload-spin {
+	100%{ -o-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-ms-keyframes cssload-spin {
+	100%{ -ms-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-webkit-keyframes cssload-spin {
+	100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-moz-keyframes cssload-spin {
+	100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
+}

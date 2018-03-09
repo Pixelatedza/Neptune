@@ -1,6 +1,7 @@
 {% extends "nepcore/base.html" %}
 
 {% block js %}
+<script src="/static/nepcore/auth/app.js"></script>
 <script>
 	app.controller('LoginCtrl', function ($scope, $http, $sce) {
 
@@ -34,7 +35,7 @@
 {% endblock %}
 
 {% block body %}
-	<body class="hold-transition login-page" ng-app="NeptuneApp" ng-controller="LoginCtrl">
+	<body class="hold-transition login-page" ng-app="NeptuneAuth" ng-controller="LoginCtrl">
 		<div class="login-box" >
 			<div class="login-logo">
 				<b>Neptune </b>
