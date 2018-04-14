@@ -58,6 +58,7 @@ app.config(function($stateProvider, $urlRouterProvider, $interpolateProvider){
 						my_link: s.link
 					},
 					controller: function($templateCache, $state){
+						console.log($state.current.data.my_link)
 						$templateCache.remove($state.current.data.my_link);
 					},
 					templateUrl: s.link

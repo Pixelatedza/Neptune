@@ -227,3 +227,14 @@ app.controller('ItemListController', function($scope, $controller, $state) {
 		$scope.emailError = null;
 	};
 });
+
+app.controller('CheckListController', function($scope, $controller, $state) {
+	$controller('ListController', {$scope: $scope});
+	$scope.url = "/nepcore/list/worklists";
+	$scope.editing = false;
+	$scope.editError = null;
+
+	$scope.go_to = function(objPk){
+		$state.go('checklist', {url: "list/checklist/" + objPk});
+	};
+});

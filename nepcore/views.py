@@ -8,11 +8,25 @@ from django.views.generic.list import ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.core import serializers
+from django.conf import settings
 from nepcore.menu import menu
 from nepcore.state import state_manager
 from nepcore.models import NEPSiteConfig, NEPMenu
-from django.conf import settings
 import json
+
+class NepSerializer(serializers.json.Serializer):
+
+	def __init__(self, **kwargs):
+		super().__init__()
+		self.serialize_foreignkey = kwargs.get('serialize_foreignkey', False)
+
+	def handle_fk_field(self, obj, field):
+		super().handle_fk_field(obj, field)
+		if self.serialize_foreignkey:
+			serializer = NepSerializer(serialize_foreignkey=False, use_natural_foreign_keys=True)
+			#serializer.get_dump_object(field.related_model.objects.get(pk=self._current[field.name]))
+			serialized_foreignkey = eval(serializer.serialize(field.related_model.objects.filter(pk=field.value_from_object(obj))))
+			self._current[field.name] = serialized_foreignkey[0]
 
 class BaseView(LoginRequiredMixin, TemplateView):
 	template_name = "nepcore/base_content.html"
@@ -46,6 +60,7 @@ class GetStates(TemplateView):
 class NEPPaginatedView(ListView):
 	paginate_by = 25
 	fields = None
+	verbose_foreignkey = False
 
 	def get_context_data(self, **kwargs):
 		context = super(NEPPaginatedView, self).get_context_data(**kwargs)
@@ -97,21 +112,21 @@ class NEPPaginatedView(ListView):
 		context = self.get_context_data()
 		context['paginator'] = self._serialize_paginator(context['paginator'])
 		context['page_obj'] = self._serialize_page_obj(context['page_obj'])
-		context['object_list'] = eval(serializers.serialize(
-			'json',
+		serializer = NepSerializer(serialize_foreignkey=True)
+		#s = serializers.json.Serializer()
+		context['object_list'] = eval(serializer.serialize(
 			context['object_list'],
 			fields=self.fields,
 			use_natural_foreign_keys=True
 		))
-		context[self.get_context_object_name(self.object_list)] = eval(serializers.serialize(
-			'json',
-			context[self.get_context_object_name(self.object_list)],
-			fields=self.fields,
-			use_natural_foreign_keys=True
-		))
+		del context[self.get_context_object_name(self.object_list)]
+		# context[self.get_context_object_name(self.object_list)] = eval(s.serialize(
+		# 	context[self.get_context_object_name(self.object_list)],
+		# 	fields=self.fields,
+		# 	use_natural_foreign_keys=True
+		# ))
 		del context['view']
 		return JsonResponse(context, status=200, safe=False)
-
 
 class LoginView(TemplateView):
 	template_name = 'nepcore/auth/login.html'

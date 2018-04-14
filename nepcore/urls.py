@@ -9,4 +9,5 @@ urlpatterns = [
 	url(r'^states/$', views.GetStates.as_view(), name='get_states'),
 	url(r'^menus/$', views.GetMenus.as_view(), name='get_menus'),
 	url(r'^auth/', include('nepauth.urls')),
+	url(r'^list/', include('neplist.urls')),
 ]

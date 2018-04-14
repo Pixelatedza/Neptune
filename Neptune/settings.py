@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'solo.apps.SoloAppConfig',
     'channels',
     'nepcore.apps.NepCore',
-    'nepcore.apps.NepAuth'
+    'nepcore.apps.NepAuth',
+    'nepcore.apps.NepList'
 #    'item',
 #    'tools'
 #    'nepauth'
@@ -132,6 +133,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = 'static/'
+
+MEDIA_ROOT = 'uploads/'
 
 LOGIN_URL = '/nepcore/login/'
 

@@ -21,7 +21,7 @@ class Menu(object):
 		# this is a mess, must make menus dynamic
 		self.request = request
 		self.children = {}
-		menu.register(text='Welcome to Neptune', state=index_state)
+		#menu.register(text='Welcome to Neptune', state=index_state)
 		self._build_from_modules()
 		self._build_from_db()
 			

@@ -1,0 +1,44 @@
+<section class="content" ng-controller='CheckListController' ng-init="getPage(1);set_groups()">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Worklists</h3>
+					<div class="box-tools">
+						<span><b>Page {[{pageObj.number}]} of {[{paginator.numPages}]}</b></span>
+						<div class="btn-group">
+							<button ng-disabled="!pageObj.hasPrev" ng-click="prevPage()" type="button" class="btn btn-sm btn-primary"><i class="fa fa-chevron-left"></i></button>
+							<button ng-disabled="!pageObj.hasNext" ng-click="nextPage()" type="button" class="btn btn-sm btn-primary"><i class="fa fa-chevron-right"></i></button>
+						</div>
+						<!-- <button type="button" class="btn btn-sm btn-primary"><i class="fa fa-plus" style="margin-right: 7px"></i>Next</button> -->
+					</div>
+				</div>
+				<div class="box-body table-responsive no-padding">
+					<div class="cssload-container" ng-show="loading">
+						<div class="cssload-speeding-wheel" style="width:40px;height:40px"></div>
+					</div>
+					<table class="table table-striped table-hover" ng-class="{'ajax-loading': loading}">
+						<thead>
+							<tr>
+								<th style="width: 10px">#</th>
+								<th style="width: 30%">Title</th>
+								<th>Date</th>
+								<th style="width: 35px"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="object in objectList" class="clickable" ng-click="select($event, object.pk)" ng-class="{'selected':selectedItems[object.pk]}">
+								<td style="width: 10px">{[{object.pk}]}</td>
+								<td style="width: 30%">{[{object.fields.template.fields.title}]}</td>
+								<td>{[{object.fields.date_time}]}</td>
+								<!-- <td style="width: 35px"><i class="fa fa-edit fa-lg" ui-sref="contacts({checklist_pk:{[{object.pk}]}})"></i></td> -->
+								<td style="width: 35px"><i class="fa fa-edit fa-lg" ng-click="go_to(object.pk)"></i></td>
+							</tr>
+							<!-- </tr> -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

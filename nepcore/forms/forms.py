@@ -2,8 +2,12 @@ from nepcore.forms.fields import *
 from django.utils import six
 from django.forms.forms import BoundField, DeclarativeFieldsMetaclass
 from django.forms import BaseForm, Textarea
+from django.forms.fields import FileField
 from django.forms.widgets import NumberInput
 from django.utils.html import format_html
+from django.conf import settings
+import base64
+import os
 
 class NEPBoundField(BoundField):
 	def label_tag(self, contents=None, attrs=None, label_suffix=None):
@@ -11,12 +15,17 @@ class NEPBoundField(BoundField):
 		return 'ng-class={"has-error":formErrors[\'' + self.name + '\']}>' + super(NEPBoundField, self).label_tag(contents, attrs, label_suffix)
 
 	def as_widget(self, widget=None, attrs=None, only_initial=False):
-		attrs = {'class':'form-control', 'ng-model':'formData[\'' + self.name + '\']'}
+		if type(self.field)==FileField:
+			attrs = {'class':'form-control', 'fileread':'formData[\'' + self.name + '\']'}
+		else:
+			attrs = {'class':'form-control', 'ng-model':'formData[\'' + self.name + '\']'}
 		val = self.value()
 		if val:
 			if type(self.field.widget) != NumberInput:
 				val = '\'%s\'' % val
+
 			attrs.update({'ng-init':'formData[\'' + self.name + '\']=%s' % val})
+
 		error_html = """<div ng-class="{'bg-red color-palette nep-error':formErrors['""" + self.name + """']}">
 			<span>{[{formErrors['""" + self.name + """']}]}</span>
 		</div>"""

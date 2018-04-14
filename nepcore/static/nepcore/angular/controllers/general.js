@@ -26,19 +26,22 @@ app.controller('postController', function($scope, $http) {
 	// create a blank object to handle form data.
 	$scope.formData = {};
 	$scope.formErrors = {};
+	$scope.disabled = false;
+
 	// calling our submit function.
 	$scope.submitForm = function(url) {
 		// Posting data as json
-		console.log($scope.formData)
+		console.log($scope);
 		$http({
 			method: 'POST',
 			url: url,
 			data: $scope.formData
-			}).then(function successCallback(response) {
+		}).then(function successCallback(response) {
+				$scope.disabled = true;
 				$scope.formData = {};
 				$scope.formErrors = {};
 			}, function errorCallback(response) {
 				$scope.formErrors = response.data;
 			});
-	};
+    };
 });

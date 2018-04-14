@@ -7,3 +7,5 @@ Neptune/local.py
 *.pydevproject
 .project
 *.vscode
+uploads
+static

@@ -7,3 +7,7 @@ class NepCore(AppConfig):
 class NepAuth(AppConfig):
     name = 'nepauth'
     verbose_name = "Neptune Authorization"
+
+class NepList(AppConfig):
+    name = 'neplist'
+    verbose_name = "Neptune Lists"
